@@ -1,25 +1,32 @@
 import express from "express"
 import dotenv from "dotenv"
 import cors from "cors"
+import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser'
 import colors from "colors";
 import connection from "./database/db.js";
 import auth from "./router/authRoute.js"
+import lectureUpload from './router/lectureUplaodRouter.js'
+import path, { dirname } from "path";
 //configure env
 dotenv.config()
 const PORT = process.env.PORT||5000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 //rest object
 const app=express();
-
-
 //MIDDLEWARE
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json()); 
+app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname,'./public')));
 
 //ROUTE
 app.use('/api/v1/auth',auth);
+app.use('/api/v1/lectureUpload',lectureUpload);
 
 // DATABASE CONNECTION
 connection();
