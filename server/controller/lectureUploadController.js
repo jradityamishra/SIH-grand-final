@@ -1,5 +1,7 @@
 import { postObject } from "../helper/s3/S3lectureUpload.js";
 import lectureUploadModel from '../models/lectureUploadModel.js'
+
+
 export const lectureUploadController=async(req,resp)=>{
    const {title,description}=req.body;
      const lectureUrl=req.file
@@ -31,4 +33,22 @@ export const lectureUploadController=async(req,resp)=>{
         message:error.message,
     })
    }
+}
+
+export const lectureGetController=async(req,resp)=>{
+try{
+  const data=await lectureUploadModel.find({});
+  console.log(data);
+
+    resp.status(200).send({
+      success: true,
+      data: data,
+    });
+}catch(error){
+  console.log(error);
+  resp.status(501).send({
+    success:false,
+    message:error.message
+  })
+}
 }

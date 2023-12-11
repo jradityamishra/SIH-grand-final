@@ -1,8 +1,8 @@
 import multer from 'multer'
 
+//specify the storage engine
 
-
-const storageVideo = multer.diskStorage({
+const storage = multer.memoryStorage({
     // destination: function(req, file, cb){
     //     cb(null, './public')
     // },
@@ -12,17 +12,23 @@ const storageVideo = multer.diskStorage({
 });
 
 
+// file validation
 
-const fileFilterVideo = (req, file, cb) => {
-    if(file.mimetype === 'video/mp4'){
+const fileFilter = (req, file, cb) => {
+    if(file.mimetype === 'application/pdf'){
         cb(null,true);
     }else{
         cb({message: 'Unsupported File Format'}, false)
     }
 };
 
-const uploadVideo = multer({
-    storage: storageVideo,
-    fileFilter: fileFilterVideo
+
+
+
+const uploadAssignment = multer({
+    storage: storage,
+    fileFilter: fileFilter
 });
-export {uploadVideo};
+
+
+export {uploadAssignment};

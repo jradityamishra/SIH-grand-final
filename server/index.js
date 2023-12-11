@@ -7,6 +7,7 @@ import colors from "colors";
 import connection from "./database/db.js";
 import auth from "./router/authRoute.js"
 import lectureUpload from './router/lectureUplaodRouter.js'
+import assignment from './router/assignmentUpload.js'
 import path, { dirname } from "path";
 //configure env
 dotenv.config()
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname,'./public')));
 //ROUTE
 app.use('/api/v1/auth',auth);
 app.use('/api/v1/lectureUpload',lectureUpload);
+app.use('/api/v1/assignmentUpload',assignment);
 
 // DATABASE CONNECTION
 connection();
