@@ -9,6 +9,7 @@ import auth from "./router/authRoute.js"
 import lectureUpload from './router/lectureUplaodRouter.js'
 import assignment from './router/assignmentUpload.js'
 import chat from './router/chatRoutes.js'
+import apiRoute from "./router/apiRoute.js"
 import path, { dirname } from "path";
 //configure env
 dotenv.config()
@@ -31,7 +32,7 @@ app.use('/api/v1/auth',auth);
 app.use('/api/v1/lectureUpload',lectureUpload);
 app.use('/api/v1/assignmentUpload',assignment);
 app.use('/api/v1/chat',chat);
-
+app.use("/api/v1", apiRoute);
 
 // DATABASE CONNECTION
 connection();
@@ -62,3 +63,4 @@ app.get("/", async (req, res, next) => {
 app.listen(PORT,()=>{
     console.log(`SERVER RUNNING AT PORT ${PORT}`.bgBlue.white)
 })
+
