@@ -17,6 +17,6 @@ const assinmentModel = new mongoose.Schema(
     
 );
 
-const User = mongoose.model("assignmentUpload", assinmentModel);
+const assignment = mongoose.model("assignmentUpload", assinmentModel);
 
-export default User; 
+export default assignment; 

@@ -75,54 +75,74 @@ export const registerController=async(req,resp)=>{
 
 
 export const loginController = async (req, resp) => {
-    try {
-      const { email, password } = req.body;
-      //validation
-      if (!email || !password) {
-        return resp.status(404).send({
-          success: false,
-          message: "invalid email or password",
-        });
-      }
-      //check user
-      const user = await User.findOne({ email });
-      if (!user) {
-        return resp.status(404).send({
-          success: false,
-          message: "User not found",
-        });
-      }
-      const match = await comparePassword(password, user.password);
-      if (!match) {
-        return resp.status(200).send({
-          sucess: false,
-          message: "Invalid Password!",
-        });
-      }
-      //create token
-      const token = await JWT.sign({ _id: user._id,
-        firstName:user.firstName,
-        lastName:user.lastName,
-        email:user.email }, process.env.JWT_SECRET_KEY, {expiresIn: "7d", });
-      resp.cookie("access token",token).status(200).send({
-          sucess:true,
-          message:"login sucesssfully",
-          user:{
-              name:user.name,
-              email:user.email,
-              phone:user.phone,
-              address:user.address,
-              role:user.role,
-          },
-          token
-      })
-    } catch (error) {
-      console.log(error);
-      resp.status(500).send({
-        sucess: false,
-        message: "Error in login",
-        error,
+  try {
+    const { email, password } = req.body;
+    //validation
+    if (!email || !password) {
+      return resp.status(404).send({
+        success: false,
+        message: "invalid email or password",
       });
     }
-  };
+    //check user
+    const user = await User.findOne({ email });
+    if (!user) {
+      return resp.status(404).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+    const match = await comparePassword(password, user.password);
+    if (!match) {
+      return resp.status(200).send({
+        sucess: false,
+        message: "Invalid Password!",
+      });
+    }
+    //create token
+    const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: "7d",
+    });
+    resp.status(200).send({
+        sucess:true,
+        message:"login sucesssfully",
+        user:{
+            name:user.name,
+            email:user.email,
+            phone:user.phone,
+            address:user.address,
+            role:user.role,
+        },
+        token
+    })
+  } catch (error) {
+    console.log(error);
+    resp.status(500).send({
+      sucess: false,
+      message: "Error in login",
+      error,
+    });
+  }
+};
+
   
+  
+
+
+  // /api/user?search=
+
+  export const getUser=async(req,resp)=>{
+   
+    
+      const keyword=req.query.search
+      ? {
+        $or:[
+          {firstName:{$regex:req.query.search, $options: 'i' }
+       }, {class:{$regex:req.query.search, $options: 'i' },}
+        ]
+      }:{};
+
+      const users=await User.find({...keyword, _id:{$ne:req.user._id}}) //except this user retun me all id
+
+    resp.send(users);
+  } 
