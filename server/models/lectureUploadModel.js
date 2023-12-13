@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 
-const lectureUploadModel = new mongoose.Schema(
-   {
-    title: {
+const LectureSchema = new mongoose.Schema({
+  title: {
     type: String,
     required: true,
     trim: true,
@@ -15,12 +14,14 @@ const lectureUploadModel = new mongoose.Schema(
   lectureUrl: {
     type: String,
     required: true,
-  }
-    
-}
-    
-);
+  },
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+  },
+});
 
-const User = mongoose.model("lectureUpload", lectureUploadModel);
+const Lecture = mongoose.model("lectureUpload", LectureSchema);
 
-export default User; 
+export default Lecture;
