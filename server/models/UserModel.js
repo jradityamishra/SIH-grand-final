@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("user", userSchema);
 
 const teacherSchema = new mongoose.Schema(
   {
@@ -88,4 +88,4 @@ const studentSchema = new mongoose.Schema(
 
 const Student = User.discriminator("Student", studentSchema);
 
-export { User, Teacher, Student };
+export {User,Teacher,Student};

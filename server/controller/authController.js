@@ -1,75 +1,94 @@
-import User from "../models/UserModel.js"
-import { hashPassword,comparePassword } from "../helper/auth/authHelper.js";
-import JWT from "jsonwebtoken"
-
-
-
+import {User,Teacher,Student} from "../models/UserModel.js";
+import { hashPassword, comparePassword } from "../helper/auth/authHelper.js";
+import generateAuthToken from "../helper/auth/generateAuthToken.js";
+// import {Student} from "../models/UserModel.js";
 
 //-------------- REGISTER USER-----------
 
+export const registerController = async (req, resp, next) => {
+  try {
+    const {
+      name,
+      email,
+      password,
+      dob,
+      role,
+      yearsOfExperience,
+      subjects,
+      levelOfEducation,
+      about,
+      studentClass,
+      board,
+    } = req.body;
 
+    if (!name || !email || !password || !role) {
+      return resp.status(400).send({ message: "All fields are required" });
+    }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export const registerController=async(req,resp)=>{
-    try {
-        const { firstName,lastName, email, password, phoneNumber } = req.body;
-        //validation
-        if (!firstName) {
-          return resp.send({ message: "name is required" });
-        }
-        if (!lastName) {
-            return resp.send({ message: "lastname is required" });
-          }
-        if (!email) {
-          return resp.send({ message: "email is required" });
-        }
-        if (!password) {
-          return resp.send({ message: "password is required" });
-        }
-        if (!phoneNumber) {
-          return resp.send({ message: "Phone no is required" });
-        }
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return resp.status(400).json({ error: "Invalid email format!" });
+    }
 
-        if (!emailRegex.test(email)) {
-          return res.status(400).json({ error: "Invalid email format!" });
-        }
-    
-        //check user
-        const existuser = await User.findOne({ email });
-        //existing user
-        if (existuser) {
-          return resp.status(200).send({
-            sucess: false,
-            message: "already Register please login",
-          });
-        }
-    
-        //register user
-        const hassedpassword = await hashPassword(password);
-        //save
-        const user = await new User({
-          firstName,
-          lastName,
-          email,
-          phoneNumber,
-          password: hassedpassword,
-        }).save();
-        resp.status(200).send({
-          sucess: true,
-          message: "user register sucessfully",
-          user,
-        });
-      } catch (error) {
-        console.log(error);
-        resp.status(500).send({
-          sucess: false,
-          message: "Error in registeration",
-          error,
-        });
-      }
-}
+    const existingUser = await User.findOne({ email });
 
+    if (existingUser) {
+      return resp.status(200).send({
+        success: false,
+        message: "User already registered. Please login.",
+      });
+    }
+
+    // Register the user
+    const hashedPassword = await hashPassword(password);
+
+    let user;
+
+    if (role === "teacher") {
+      user = await new Teacher({
+        name,
+        email,
+        password: hashedPassword,
+        dob,
+        role,
+        yearsOfExperience,
+        subjects,
+        levelOfEducation,
+        about,
+      }).save();
+    } else if (role === "student") {
+      user = await new Student({
+        name,
+        email,
+        role,
+        password: hashedPassword,
+        dob,
+        studentClass,
+        board,
+      }).save();
+    }
+    resp
+      .cookie(
+        "access_token",
+        generateAuthToken(user._id, user.name, user.email),
+        {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        }
+      )
+      .status(201)
+      .json({
+        _id: user._id,
+        name: user.name,
+        role: user.role,
+        email: user.email,
+      });
+  } catch (error) {
+    next(error);
+  }
+};
 
 //-------------- LOGIN USER-----------
 
@@ -95,38 +114,31 @@ export const loginController = async (req, resp) => {
     const match = await comparePassword(password, user.password);
     if (!match) {
       return resp.status(200).send({
-        sucess: false,
+        success: false,
         message: "Invalid Password!",
       });
     }
-    //create token
-    const token = await JWT.sign({ _id: user._id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: "7d",
-    });
-    resp.status(200).send({
-        sucess:true,
-        message:"login sucesssfully",
-        user:{
-            name:user.name,
-            email:user.email,
-            phone:user.phone,
-            address:user.address,
-            role:user.role,
-        },
-        token
-    })
+    resp
+      .cookie(
+        "access_token",
+        generateAuthToken(user._id, user.name, user.email),
+        {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+        }
+      )
+      .status(201)
+      .json({
+        _id: user._id,
+        name: user.name,
+        role: user.role,
+        email: user.email,
+      });
   } catch (error) {
-    console.log(error);
-    resp.status(500).send({
-      sucess: false,
-      message: "Error in login",
-      error,
-    });
+    next(error);
   }
 };
-
-  
-  
 
 
   // /api/user?search=
@@ -146,3 +158,4 @@ export const loginController = async (req, resp) => {
 
     resp.send(users);
   } 
+       
