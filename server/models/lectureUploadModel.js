@@ -11,6 +11,9 @@ const LectureSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  summaryLink: {
+    type: String,
+  },
   lectureUrl: {
     type: String,
     required: true,
