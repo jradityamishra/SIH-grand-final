@@ -74,14 +74,16 @@ const Course = () => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button
-                    size="small"
-                    href={val.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Details
-                  </Button>
+                  <Link to={`/teacher/courses/${val.id}`}>
+                    <Button
+                      size="small"
+                      href={val.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Details
+                    </Button>
+                  </Link>
                 </CardActions>
               </React.Fragment>
             </Card>
