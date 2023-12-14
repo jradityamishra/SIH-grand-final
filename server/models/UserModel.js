@@ -88,4 +88,4 @@ const studentSchema = new mongoose.Schema(
 
 const Student = User.discriminator("Student", studentSchema);
 
-export {User,Teacher,Student};
+export { User, Teacher, Student };

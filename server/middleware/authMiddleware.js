@@ -8,7 +8,7 @@ export const requireSignIn = async (req, resp, next) => {
       req.headers.authorization,
       process.env.JWT_SECRET_KEY
     ); //VERIFY USE FOR COMPARE TOKEN
-   req.user = decode;
+    req.user = decode;
     next();
   } catch (error) {
     console.log(error);

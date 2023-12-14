@@ -1,6 +1,5 @@
-import Chat from "../models/chatModel.js"
-import {User} from "../models/UserModel.js"
-
+import Chat from "../models/chatModel.js";
+import { User } from "../models/UserModel.js";
 
 export const accessChatController = async (req, res) => {
   const { userId } = req.body;
@@ -22,7 +21,7 @@ export const accessChatController = async (req, res) => {
 
   isChat = await User.populate(isChat, {
     path: "latestMessage.sender",
-    select:"firstName LastName email"
+    select: "firstName LastName email",
   });
 
   if (isChat.length > 0) {
@@ -51,27 +50,26 @@ export const accessChatController = async (req, res) => {
 export const fetchChatController = async (req, resp) => {
   try {
     Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
-   .populate("users","-password")
-    .populate("groupAdmin", "-password")
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password")
       .populate("latestMessage")
-      .sort({updatedAt:-1})
-      .then(async (result)=>{
+      .sort({ updatedAt: -1 })
+      .then(async (result) => {
         result = await User.populate(result, {
           path: "latestMessage.sender",
-          select:"firstName LastName email"
-      
+          select: "firstName LastName email",
         });
         resp.status(200).send(result);
-      })
+      });
   } catch (error) {
     resp.status(500).send({
-      success:false,
-      message:error.message
-    })
+      success: false,
+      message: error.message,
+    });
   }
-}
+};
 
-export const creatGroupChatController=async(req,resp)=>{
+export const creatGroupChatController = async (req, resp) => {
   if (!req.body.users || !req.body.name) {
     return resp.status(400).send({ message: "Please Fill all the feilds" });
   }
@@ -103,9 +101,9 @@ export const creatGroupChatController=async(req,resp)=>{
     resp.status(400);
     throw new Error(error.message);
   }
-}
+};
 
-export const renameGroupChatController=async(req,resp)=>{
+export const renameGroupChatController = async (req, resp) => {
   const { chatId, chatName } = req.body;
 
   const updatedChat = await Chat.findByIdAndUpdate(
@@ -122,16 +120,15 @@ export const renameGroupChatController=async(req,resp)=>{
 
   if (!updatedChat) {
     resp.status(404).send({
-      success:false,
-      message:"chat not found"
-    })
-    
+      success: false,
+      message: "chat not found",
+    });
   } else {
     resp.json(updatedChat);
   }
-}
+};
 
-export const addToGroupController=async(req,resp)=>{
+export const addToGroupController = async (req, resp) => {
   const { chatId, userId } = req.body;
 
   // check if the requester is admin
@@ -154,9 +151,9 @@ export const addToGroupController=async(req,resp)=>{
   } else {
     resp.json(added);
   }
-}
+};
 
-export const removeToGroupController=async(req,resp)=>{
+export const removeToGroupController = async (req, resp) => {
   const { chatId, userId } = req.body;
 
   // check if the requester is admin
@@ -179,4 +176,4 @@ export const removeToGroupController=async(req,resp)=>{
   } else {
     resp.json(removed);
   }
-}
+};

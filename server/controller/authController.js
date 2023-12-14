@@ -1,4 +1,4 @@
-import {User,Teacher,Student} from "../models/UserModel.js";
+import { User, Teacher, Student } from "../models/UserModel.js";
 import { hashPassword, comparePassword } from "../helper/auth/authHelper.js";
 import generateAuthToken from "../helper/auth/generateAuthToken.js";
 // import {Student} from "../models/UserModel.js";
@@ -92,7 +92,6 @@ export const registerController = async (req, resp, next) => {
 
 //-------------- LOGIN USER-----------
 
-
 export const loginController = async (req, resp) => {
   try {
     const { email, password } = req.body;
@@ -140,22 +139,19 @@ export const loginController = async (req, resp) => {
   }
 };
 
+// /api/user?search=
 
-  // /api/user?search=
+export const getUser = async (req, resp) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { firstName: { $regex: req.query.search, $options: "i" } },
+          { class: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
 
-  export const getUser=async(req,resp)=>{
-   
-    
-      const keyword=req.query.search
-      ? {
-        $or:[
-          {firstName:{$regex:req.query.search, $options: 'i' }
-       }, {class:{$regex:req.query.search, $options: 'i' },}
-        ]
-      }:{};
+  const users = await User.find({ ...keyword, _id: { $ne: req.user._id } }); //except this user retun me all id
 
-      const users=await User.find({...keyword, _id:{$ne:req.user._id}}) //except this user retun me all id
-
-    resp.send(users);
-  } 
-       
+  resp.send(users);
+};
