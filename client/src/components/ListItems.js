@@ -37,12 +37,12 @@ export const mainListItems = (
         <ListItemText primary="Collaboration" />
       </ListItemButton>
     </Link>
-    <Link to="/teacher/assignments">
+    <Link to="/teacher/analysis">
       <ListItemButton>
         <ListItemIcon>
           <BarChartIcon />
         </ListItemIcon>
-        <ListItemText primary="Assignments" />
+        <ListItemText primary="Analysis" />
       </ListItemButton>
     </Link>
     <Link to="/teacher/mentorship">

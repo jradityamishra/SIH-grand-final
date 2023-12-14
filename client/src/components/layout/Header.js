@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import List from "@mui/material/List";
 import MuiAppBar from "@mui/material/AppBar";
 import MuiDrawer from "@mui/material/Drawer";
@@ -12,6 +12,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { mainListItems, secondaryListItems } from "../ListItems";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -95,9 +96,11 @@ const Header = () => {
             Siksha Sahyog
           </Typography>
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+            <Link to="/profile">
+              <Badge badgeContent={4} color="secondary">
+                <AccountCircleIcon fontSize="large" />
+              </Badge>{" "}
+            </Link>
           </IconButton>
         </Toolbar>
       </AppBar>
