@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-
+const user = JSON.parse(sessionStorage.getItem("user"));
 const initialState = {
     user: user ? user : null,
     isError: false,
@@ -15,7 +15,8 @@ const initialState = {
     "auth/register",
     async (userData, thunkAPI) => {
       try {
-        const res = await axios.post("/api/users/register", userData);
+        console.log(userData)
+        const res = await axios.post("/api/v1/auth/register", userData);
   
         if (res.data) {
           const userData = {
@@ -46,8 +47,9 @@ const initialState = {
   });
   export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
     try {
-      const response = await axios.post("/api/users/login", user);
-      if (response.status === 200) {
+      const response = await axios.post("/api/v1/auth/login", user);
+      console.log(response)
+      if (response.status === 201) {
         const userData = {
           ...response.data,
         };
@@ -56,8 +58,8 @@ const initialState = {
       }
     } catch (err) {
       var msg;
-      if (err.response.status === 401 || err.response.status === 400)
-        msg = err.response.data.error;
+      if (err.response.status === 404 || err.response.status === 401)
+        msg = err.response.message;
       else
         msg =
           (err.response && err.response.data && err.response.data.error) ||
