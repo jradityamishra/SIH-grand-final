@@ -136,7 +136,7 @@ cloudinary.config({
   api_key: process.env.CLOUD_API,
   api_secret: process.env.CLOUD_SECRET,
 });
-//save button
+
 export const generatePdfAndUpload = async (req, res, next) => {
   try {
     const { content } = req.body;
