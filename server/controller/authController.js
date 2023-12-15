@@ -70,7 +70,7 @@ export const registerUser = async (req, resp, next) => {
     resp
       .cookie(
         "access_token",
-        generateAuthToken(user._id, user.name, user.email),
+        generateAuthToken(user._id, user.name, user.email, user.role),
         {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
@@ -119,7 +119,7 @@ export const loginUser = async (req, resp, next) => {
     resp
       .cookie(
         "access_token",
-        generateAuthToken(user._id, user.name, user.email),
+        generateAuthToken(user._id, user.name, user.email, user.role),
         {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",

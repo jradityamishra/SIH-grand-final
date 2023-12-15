@@ -2,7 +2,7 @@ import { postObject } from "../helper/s3/S3lectureUpload.js";
 import lectureUploadModel from "../models/lectureUploadModel.js";
 
 export const lectureUploadController = async (req, resp) => {
-  const { title, description } = req.body;
+  const { title, description, link } = req.body;
   const lectureUrl = req.file;
   const videoname = req.file.originalname;
 
@@ -11,14 +11,16 @@ export const lectureUploadController = async (req, resp) => {
     if (get) {
       const upload = await lectureUploadModel({
         title: title,
+        creator: req.user._id,
         description: description,
+        videoLink: link,
         lectureUrl: get,
       }).save();
 
       if (upload) {
         resp.status(201).send({
           success: true,
-          message: "lecture uploaded done",
+          message: "lecture upload successful",
           upload,
         });
       }

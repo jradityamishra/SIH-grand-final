@@ -11,7 +11,14 @@ const LectureSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  summaryLink: {
+  videoLink: {
+    type: String,
+    required: true,
+  },
+  pdfLink: {
+    type: String,
+  },
+  summaryContent: {
     type: String,
   },
   lectureUrl: {
@@ -21,7 +28,7 @@ const LectureSchema = new mongoose.Schema({
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "User",
+    ref: "Teacher",
   },
 });
 

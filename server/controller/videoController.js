@@ -3,7 +3,9 @@ import { exec } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-
+import puppeteer from "puppeteer";
+import { v2 as cloudinary } from "cloudinary";
+import lectureUploadModel from "../models/lectureUploadModel.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const apiKey = process.env.RAPID_API_KEY;
@@ -49,7 +51,7 @@ const truncateToMaxWords = (text, maxWords) => {
 
 const requestSummary = async (text) => {
   const content =
-    "you are a teacher tasked with preparing study material. Write a summary in 600 words in html format with headings,subheadings and underline important words, based on this video transcript:" +
+    "As an instructor, create a detailed HTML study document summarizing a video transcript in 600 words(must). Utilize bold headings, subheadings, and underlining for emphasis. The HTML should exclude the <title> and <!DOCTYPE HTML> elements and only have a body enclosed within <html> tags, maintaining a clear hierarchy of headings and subheadings on:" +
     text;
   const options = {
     method: "POST",
@@ -81,8 +83,9 @@ const requestSummary = async (text) => {
   }
 };
 export const getQuiz = async (req, res, next) => {
-  const summary =
-    "The Khilji Dynasty, which ruled parts of the Indian subcontinent during the medieval period, emerged in the 13th century. Its founder, Jalal-ud-din Khilji, ascended the throne in 1290 after the decline of the Delhi Sultanate's Slave Dynasty. The most prominent ruler of the Khilji Dynasty was Alauddin Khilji, who took power in 1296. Alauddin is best known for his military prowess and administrative reforms.Under Alauddin Khilji's rule, the Khilji Dynasty expanded its territory through successful military campaigns. The most notable conquest was the invasion of the Deccan region, bringing significant portions of southern India under Delhi's control. Alauddin Khilji implemented economic and administrative reforms, including the market control system and land revenue assessments.The dynasty faced internal strife and external threats, and after Alauddin's death in 1316, it witnessed a period of decline. The last ruler of the Khilji Dynasty, Qutb-ud-din Mubarak Shah, faced challenges from rival factions, ultimately leading to the end of the dynasty in 1320. Despite its relatively short-lived existence, the Khilji Dynasty left a lasting impact on the political and cultural landscape of medieval India.";
+  const { id } = req.params;
+  const lecture = await lectureUploadModel.findById(id);
+  const summary = lecture.summaryContent;
   const content = `${summary}\nGenerate multiple-choice questions and answers based on the above summary(ignore HTML tags).Create 6 questions, each with 4 options. Return a JSON object without comments and special characters, containing two arrays: one for the multiple-choice questions with their options (MCQs) and the other for their corresponding answers(answers) stating the correct option using capital letters.`;
   const options = {
     method: "POST",
@@ -124,6 +127,64 @@ export const getQuiz = async (req, res, next) => {
       console.error("Invalid JSON structure");
     }
   } catch (error) {
+    next(error);
+  }
+};
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API,
+  api_secret: process.env.CLOUD_SECRET,
+});
+//save button
+export const generatePdfAndUpload = async (req, res, next) => {
+  try {
+    const { content } = req.body;
+    const { id } = req.params;
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(content);
+
+    const pdfBuffer = await page.pdf({
+      format: "A4",
+      margin: {
+        top: "15mm",
+        right: "15mm",
+        bottom: "15mm",
+        left: "15mm",
+      },
+    });
+    await browser.close();
+
+    cloudinary.uploader
+      .upload_stream(
+        { resource_type: "auto", folder: "pdfs" },
+        async (error, result) => {
+          if (error) {
+            console.error("Error uploading to Cloudinary:", error);
+            res.status(500).json({ error: "Error uploading to Cloudinary" });
+          } else {
+            console.log("Cloudinary response:", result);
+
+            const { secure_url, public_id } = result;
+
+            try {
+              await lectureUploadModel.findByIdAndUpdate(id, {
+                summaryContent: content,
+                pdfLink: secure_url,
+              });
+
+              res.status(201).send("Save successful");
+            } catch (updateError) {
+              console.error("Error updating MongoDB document:", updateError);
+              next(updateError);
+            }
+          }
+        }
+      )
+      .end(pdfBuffer);
+  } catch (error) {
+    console.error("Error generating PDF:", error);
     next(error);
   }
 };
