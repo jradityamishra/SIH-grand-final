@@ -19,9 +19,10 @@ export const registerController = async (req, resp, next) => {
       about,
       studentClass,
       board,
+      school
     } = req.body;
 
-    if (!name || !email || !password || !role) {
+    if (!name || !email || !password || !role|| !school) {
       return resp.status(400).send({ message: "All fields are required" });
     }
 
@@ -66,6 +67,7 @@ export const registerController = async (req, resp, next) => {
         dob,
         studentClass,
         board,
+        school
       }).save();
     }
     resp
@@ -113,7 +115,7 @@ export const loginController = async (req, resp) => {
     }
     const match = await comparePassword(password, user.password);
     if (!match) {
-      return resp.status(200).send({
+      return resp.status(401).send({
         success: false,
         message: "Invalid Password!",
       });
@@ -129,11 +131,11 @@ export const loginController = async (req, resp) => {
         }
       )
       .status(201)
-      .json({
-        _id: user._id,
-        name: user.name,
-        role: user.role,
-        email: user.email,
+      .send({
+        success:true,
+        message:"login successfully",
+        user
+
       });
   } catch (error) {
     next(error);
@@ -151,10 +153,12 @@ export const loginController = async (req, resp) => {
         $or:[
           {firstName:{$regex:req.query.search, $options: 'i' }
        }, {class:{$regex:req.query.search, $options: 'i' },}
-        ]
-      }:{};
+        ],
+        role: { $ne: 'teacher' }, // Exclude users with the role 'teacher'
+      }
+    : { role: { $ne: 'teacher' }};
 
-      const users=await User.find({...keyword, _id:{$ne:req.user._id}}) //except this user retun me all id
+      const users=await User.find({...keyword,  _id:{$ne:req.user._id}}) //except this user retun me all id
 
     resp.send(users);
   } 
