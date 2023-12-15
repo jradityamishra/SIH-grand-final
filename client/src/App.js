@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/teacher/Dashboard";
@@ -10,6 +11,7 @@ import CollabDetail from "./pages/teacher/CollabDetail";
 import CourseDetail from "./pages/teacher/CourseDetail";
 import Analysis from "./pages/Analysis";
 import Profile from "./pages/teacher/Profile";
+import EditorPage from "./pages/teacher/EditorPage";
 const App = () => {
   return (
     <>
@@ -29,7 +31,7 @@ const App = () => {
         <Route path="/teacher/courses" element={<Course />} />
         <Route path="/teacher/courses/:id" element={<CourseDetail />} />
         <Route path="/teacher/createcourse" element={<CreateCourse />} />
-
+        <Route path="/teacher/editor" element={<EditorPage />} />
         <Route path="/teacher/analysis" element={<Analysis />} />
       </Routes>
     </>
