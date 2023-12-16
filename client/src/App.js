@@ -1,4 +1,6 @@
 import React from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/teacher/Dashboard";
@@ -10,10 +12,11 @@ import CollabDetail from "./pages/teacher/CollabDetail";
 import CourseDetail from "./pages/teacher/CourseDetail";
 import Analysis from "./pages/Analysis";
 import Profile from "./pages/teacher/Profile";
+import EditorPage from "./pages/teacher/EditorPage";
 import ClassDetail from "./pages/teacher/ClassDetail";
 const App = () => {
   return (
-    <>
+    <div>
       <Routes>
         <Route path="/" element={<Landing />} />
 
@@ -32,9 +35,11 @@ const App = () => {
         <Route path="/teacher/createcourse" element={<CreateCourse />} />
         <Route path="/teacher/class/:id" element={<ClassDetail />} />
 
+        <Route path="/teacher/editor" element={<EditorPage />} />
         <Route path="/teacher/analysis" element={<Analysis />} />
       </Routes>
-    </>
+      {/* <ToastContainer /> */}
+    </div>
   );
 };
 
