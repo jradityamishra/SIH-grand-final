@@ -1,5 +1,5 @@
 import React from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
@@ -15,7 +15,7 @@ import Profile from "./pages/teacher/Profile";
 import EditorPage from "./pages/teacher/EditorPage";
 const App = () => {
   return (
-    <>
+    <div>
       <Routes>
         <Route path="/" element={<Landing />} />
 
@@ -35,8 +35,8 @@ const App = () => {
         <Route path="/teacher/editor" element={<EditorPage />} />
         <Route path="/teacher/analysis" element={<Analysis />} />
       </Routes>
-      <ToastContainer />
-    </>
+      {/* <ToastContainer /> */}
+    </div>
   );
 };
 

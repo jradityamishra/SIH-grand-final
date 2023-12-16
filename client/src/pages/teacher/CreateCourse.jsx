@@ -7,91 +7,108 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
-import { toast, ToastContainer } from "react-toastify"; // Import toast notifications
-import "react-toastify/dist/ReactToastify.css";
 import Layout from "../../components/layout/Layout";
 import Spinner from "../../components/Spinner";
+import EditorPage from "./EditorPage";
+
 const CreateCourse = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [question, setQuestion] = useState("");
   const [video, setVideo] = useState(null);
-  const [thumbnail, setThumbnail] = useState(null);
+  const [link, setLink] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [summary, setSummary] = useState("");
 
-  const handleVideoUpload = async () => {
+  const handleUpload = async () => {
     try {
-      
-      const response = await axios.post("/api/upload/video", { video });
+      setLoading(true);
 
-      // Assuming successful response, notify the user
-      toast.success("Video uploaded successfully!");
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("link", link);
+      formData.append("lectureUrl", video);
+
+      const response = await axios.post("api/v1/lectureUpload", formData);
+
+      const videoID = link.replace("https://www.youtube.com/watch?v=", "");
+
+      // Get transcript
+      const transcriptResponse = await axios.get(
+        `api/v1/transcript/${videoID}`
+      );
+
+      if (transcriptResponse.data && transcriptResponse.data.summary) {
+        setSummary(transcriptResponse.data.summary);
+        setLoading(false);
+      }
+
+      if (response.status === 201) {
+        console.log("success");
+
+        alert("Video upload is successful");
+      }
     } catch (error) {
-      console.error("Error uploading video:", error);
-      toast.error("Error uploading video. Please try again.");
+      console.log(error);
+      setLoading(false);
     }
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission here
-    // try {
-    //   axios.post("/api/teacher/createcourse", { title, description, summary, video, thumbnail })
-    //       .then((response) => {
-    //           console.log(response.data);
-    //       });
-    // } catch (error) {
-    //   console.log(error);
-    // }
   };
 
   return (
     <Layout>
       <div className="px-8">
-        <h2 className="text-3xl font-semibold text-center">Upload lecture</h2>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            fullWidth
-            label="Lecture Title"
-            margin="normal"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <TextField
-            fullWidth
-            label="Lecture Description"
-            margin="normal"
-            multiline
-            rows={2}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          {/* Video Upload Input Field */}
-          <FormControl fullWidth margin="normal">
-            <InputLabel className="mt-8">Upload Video</InputLabel>
-            <Input
-              type="file"
-              inputProps={{ accept: "video/*" }}
-              onChange={(e) => setVideo(e.target.files[0])}
-            />
-          </FormControl>
+        {loading ? (
+          <Spinner />
+        ) : summary ? (
+          <EditorPage summary={summary} />
+        ) : (
+          <>
+            <h2 className="text-3xl font-semibold text-center">Create Video</h2>
+            <form>
+              <TextField
+                fullWidth
+                label="Lecture Title"
+                margin="normal"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <TextField
+                fullWidth
+                label="Lecture Description"
+                margin="normal"
+                multiline
+                rows={2}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
 
-          {/* Video Link Input Field */}
-          <TextField
-            fullWidth
-            label="Video Link"
-            margin="normal"
-            value={video ? video.name : ""}
-            disabled
-          />
+              <FormControl fullWidth margin="normal">
+                <Input
+                  label="lecture video"
+                  type="file"
+                  inputProps={{ accept: "video/*" }}
+                  onChange={(e) => setVideo(e.target.files[0])}
+                />
+              </FormControl>
 
-          <Button
-            variant="contained"
-            style={{ marginTop: "8px" }}
-            onClick={handleVideoUpload}
-          >
-            Upload Video
-          </Button>
-        </form>
+              <TextField
+                fullWidth
+                label="Lecture Link"
+                margin="normal"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+              />
+
+              <Button
+                variant="contained"
+                style={{ marginTop: "8px" }}
+                onClick={handleUpload}
+              >
+                Upload Video
+              </Button>
+            </form>
+          </>
+        )}
       </div>
     </Layout>
   );
