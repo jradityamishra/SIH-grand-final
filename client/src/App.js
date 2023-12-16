@@ -1,5 +1,6 @@
 import React from "react";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/teacher/Dashboard";
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/teacher/editor" element={<EditorPage />} />
         <Route path="/teacher/analysis" element={<Analysis />} />
       </Routes>
+      <ToastContainer />
     </>
   );
 };
