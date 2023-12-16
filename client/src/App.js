@@ -10,6 +10,7 @@ import CollabDetail from "./pages/teacher/CollabDetail";
 import CourseDetail from "./pages/teacher/CourseDetail";
 import Analysis from "./pages/Analysis";
 import Profile from "./pages/teacher/Profile";
+import ClassDetail from "./pages/teacher/ClassDetail";
 const App = () => {
   return (
     <>
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/teacher/courses" element={<Course />} />
         <Route path="/teacher/courses/:id" element={<CourseDetail />} />
         <Route path="/teacher/createcourse" element={<CreateCourse />} />
+        <Route path="/teacher/class/:id" element={<ClassDetail />} />
 
         <Route path="/teacher/analysis" element={<Analysis />} />
       </Routes>

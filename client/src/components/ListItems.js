@@ -56,28 +56,117 @@ export const mainListItems = (
   </React.Fragment>
 );
 
+const teacher = {
+  name: "Teacher",
+  email: "teacher@gmail.com",
+  image: "https://source.unsplash.com/random",
+  phone: "555-1234",
+  courses: [
+    {
+      id: 1,
+      title: "Web Development",
+      duration: "50 hours",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
+      thumbnail:
+        "https://img.freepik.com/free-vector/online-tutorials-concept_52683-37480.jpg?w=1060&t=st=1702486800~exp=1702487400~hmac=2cc4ec582d4daff94f7bfe35fe3d623a5a6cafce72b0d704c6d5054ff37a1c17",
+      chapters: ["html", "css", "js", "react", "nodejs", "express", "mongodb"],
+    },
+    {
+      id: 2,
+      title: "Blockchain",
+      duration: "40 hours",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
+      thumbnail:
+        "https://img.freepik.com/free-vector/online-tutorials-concept_52683-37480.jpg?w=1060&t=st=1702486800~exp=1702487400~hmac=2cc4ec582d4daff94f7bfe35fe3d623a5a6cafce72b0d704c6d5054ff37a1c17",
+      chapters: ["html", "css", "js", "react", "nodejs", "express", "mongodb"],
+    },
+  ],
+  classes: [
+    {
+      id: 1,
+      name: "Class 1",
+      subject: "English",
+      students: [
+        {
+          name: "Student 1",
+          email: "student1@gmail.com",
+          performance: "matching subject",
+        },
+        {
+          name: "Student 2",
+          email: "student2@gmail.com",
+          performance: "matching subject",
+        },
+        {
+          name: "Student 3",
+          email: "student3@gmail.com",
+          performance: "matching subject",
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "Class 2",
+      subject: "Maths",
+      students: [
+        {
+          name: "Student 1",
+          email: "student1@gmail.com",
+          performance: "matching subject",
+        },
+        {
+          name: "Student 2",
+          email: "student2@gmail.com",
+          performance: "matching subject",
+        },
+        {
+          name: "Student 3",
+          email: "student3@gmail.com",
+          performance: "matching subject",
+        },
+      ],
+    },
+    {
+      id: 3,
+      name: "Class 3",
+      subject: "Science",
+      students: [
+        {
+          name: "Student 1",
+          email: "student1@gmail.com",
+          performance: "matching subject",
+        },
+        {
+          name: "Student 2",
+          email: "student2@gmail.com",
+          performance: "matching subject",
+        },
+        {
+          name: "Student 3",
+          email: "student3@gmail.com",
+          performance: "matching subject",
+        },
+      ],
+    },
+  ],
+  feedback: ["teacher analysis", "students analysis"],
+};
+
 export const secondaryListItems = (
   <React.Fragment>
     <ListSubheader component="div" inset>
-      Saved reports
+      My Classes
     </ListSubheader>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Current month" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
-    </ListItemButton>
+
+    {teacher.classes.map((item) => (
+      <Link to={`/teacher/class/${item.id}`}>
+        <ListItemButton key={item.id}>
+          <ListItemIcon>
+            <AssignmentIcon />
+          </ListItemIcon>
+          <ListItemText primary={item.name} />
+        </ListItemButton>
+      </Link>
+    ))}
   </React.Fragment>
 );
