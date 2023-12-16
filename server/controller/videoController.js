@@ -1,39 +1,25 @@
-import { promisify } from "util";
-import { exec } from "child_process";
-import path from "path";
-import { fileURLToPath } from "url";
+// import { promisify } from "util";
+// import { exec } from "child_process";
+// import path from "path";
+// import { fileURLToPath } from "url";
 import axios from "axios";
 import puppeteer from "puppeteer";
 import { v2 as cloudinary } from "cloudinary";
 import lectureUploadModel from "../models/lectureUploadModel.js";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 const apiKey = process.env.RAPID_API_KEY;
-const execAsync = promisify(exec);
+//const execAsync = promisify(exec);
 
 export const getTranscript = async (req, res, next) => {
-  const { id } = req.params;
-
-  if (!id) {
-    return res.status(400).json({ error: "Invalid YouTube video URL" });
-  }
-
-  const p = path.join(__dirname, "transcript.py");
-
   try {
-    const command = `python ${p} ${id}`;
-    const { stdout, stderr } = await execAsync(command);
+    const { description } = req.body;
 
-    if (stderr) {
-      console.error(`Error: ${stderr}`);
-      return res.status(400).send("Bad Request");
+    if (!description) {
+      return res.status(400).json({ error: "Invalid YouTube video URL" });
     }
 
-    const transcript = stdout;
-
-    const truncatedTranscript = truncateToMaxWords(transcript, 3800);
-
-    const summary = await requestSummary(truncatedTranscript);
+    const summary = await requestSummary(description);
 
     res.json({ summary });
   } catch (error) {
@@ -41,25 +27,16 @@ export const getTranscript = async (req, res, next) => {
   }
 };
 
-const truncateToMaxWords = (text, maxWords) => {
-  const words = text.split(" ");
-  if (words.length > maxWords) {
-    return words.slice(0, maxWords).join(" ");
-  }
-  return text;
-};
-
 const requestSummary = async (text) => {
-  const content =
-    "As an instructor, create a detailed HTML study document summarizing a video transcript in 600 words(must). Utilize bold headings, subheadings, and underlining for emphasis. The HTML should exclude the <title> and <!DOCTYPE HTML> elements and only have a body enclosed within <html> tags, maintaining a clear hierarchy of headings and subheadings on:" +
-    text;
+  const content = `As an instructor, create a detailed HTML study document(only) on this topic:${text}. Utilize bold headings, subheadings, and underlining for emphasis. The HTML should exclude the <title> and <!DOCTYPE HTML> elements and only have a body enclosed within <html> tags, maintaining a clear hierarchy of headings and subheadings`;
+  text;
   const options = {
     method: "POST",
-    url: "https://open-ai21.p.rapidapi.com/conversationgpt",
+    url: "https://chatgpt-42.p.rapidapi.com/matag2",
     headers: {
       "content-type": "application/json",
       "X-RapidAPI-Key": apiKey,
-      "X-RapidAPI-Host": "open-ai21.p.rapidapi.com",
+      "X-RapidAPI-Host": "chatgpt-42.p.rapidapi.com",
     },
     data: {
       messages: [
@@ -69,32 +46,40 @@ const requestSummary = async (text) => {
         },
       ],
       web_access: true,
+      max_tokens: 2000,
     },
   };
 
   try {
     const response = await axios.request(options);
 
-    const summary = response.data.result || "";
+    const summary = extractSummary(response.data.result) || "";
     return summary;
   } catch (error) {
     console.error(error);
     return "Summary not available";
   }
 };
+
+const extractSummary = (text) => {
+  const startIndex = text.indexOf("<");
+  const endIndex = text.lastIndexOf(">");
+  const extractedSummary = text.substring(startIndex, endIndex + 1);
+  return extractedSummary;
+};
+//games
 export const getQuiz = async (req, res, next) => {
   const { id } = req.params;
   const lecture = await lectureUploadModel.findById(id);
   const summary = lecture.summaryContent;
-  const content = `${summary}\nGenerate multiple-choice questions and answers based on the above summary(ignore HTML tags).Create 6 questions, each with 4 options. Return a JSON object without comments and special characters, containing two arrays: one for the multiple-choice questions with their options (MCQs) and the other for their corresponding answers(answers) stating the correct option using capital letters.`;
+  const content = `${summary}\nGenerate multiple-choice questions and answers based on the above summary(ignore HTML tags).Create 6 questions, each with 4 options numbered using capital letters only. Return a JSON object without comments and special characters, containing two arrays: one for the multiple-choice questions with their options (MCQs) and the other for their corresponding answers(answers) stating the correct option using capital letters.`;
   const options = {
     method: "POST",
-    url: "https://open-ai21.p.rapidapi.com/conversationgpt",
-
+    url: "https://chatgpt-42.p.rapidapi.com/matag2",
     headers: {
       "content-type": "application/json",
       "X-RapidAPI-Key": apiKey,
-      "X-RapidAPI-Host": "open-ai21.p.rapidapi.com",
+      "X-RapidAPI-Host": "chatgpt-42.p.rapidapi.com",
     },
     data: {
       messages: [
@@ -104,6 +89,7 @@ export const getQuiz = async (req, res, next) => {
         },
       ],
       web_access: true,
+      max_tokens: 3000,
     },
   };
   try {
@@ -122,7 +108,7 @@ export const getQuiz = async (req, res, next) => {
     ) {
       const cleanedData = rawData.slice(jsonStartIndex, jsonEndIndex + 1);
 
-      res.send(cleanedData);
+      res.status(200).send(cleanedData);
     } else {
       console.error("Invalid JSON structure");
     }
@@ -169,10 +155,23 @@ export const generatePdfAndUpload = async (req, res, next) => {
             const { secure_url, public_id } = result;
 
             try {
-              await lectureUploadModel.findByIdAndUpdate(id, {
-                summaryContent: content,
-                pdfLink: secure_url,
-              });
+              const updatedDocument =
+                await lectureUploadModel.findByIdAndUpdate(
+                  id,
+                  {
+                    $set: {
+                      summaryContent: content,
+                      pdfLink: secure_url,
+                    },
+                  },
+                  { new: true, useFindAndModify: false }
+                );
+
+              if (!updatedDocument) {
+                console.error("Document not found");
+                res.status(404).json({ error: "Document not found" });
+                return;
+              }
 
               res.status(201).send("Save successful");
             } catch (updateError) {
@@ -188,6 +187,7 @@ export const generatePdfAndUpload = async (req, res, next) => {
     next(error);
   }
 };
+
 //this is the format of result being returned:
 /*
 {

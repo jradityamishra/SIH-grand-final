@@ -10,7 +10,7 @@ const router = express.Router();
 
 //-------------- ROUTING-----------
 
-router.get("/transcript/:id", getTranscript);
+router.post("/transcript", getTranscript);
 router.get("/quiz/:id", getQuiz);
 router.post("/pdf/:id", generatePdfAndUpload);
 export default router;

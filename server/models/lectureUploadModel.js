@@ -13,7 +13,6 @@ const LectureSchema = new mongoose.Schema({
   },
   videoLink: {
     type: String,
-    required: true,
   },
   pdfLink: {
     type: String,

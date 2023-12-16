@@ -2,7 +2,7 @@ import { postObject } from "../helper/s3/S3lectureUpload.js";
 import lectureUploadModel from "../models/lectureUploadModel.js";
 
 export const lectureUploadController = async (req, resp) => {
-  const { title, description, link } = req.body;
+  const { title, description } = req.body;
   const lectureUrl = req.file;
   const videoname = req.file.originalname;
 
@@ -11,9 +11,8 @@ export const lectureUploadController = async (req, resp) => {
     if (get) {
       const upload = await lectureUploadModel({
         title: title,
-        creator: req.user._id,
+        creator: "657d5fffacbeae883da2fee0",
         description: description,
-        videoLink: link,
         lectureUrl: get,
       }).save();
 
@@ -36,7 +35,7 @@ export const lectureUploadController = async (req, resp) => {
 
 export const lectureGetController = async (req, resp) => {
   try {
-    const data = await lectureUploadModel.find({});
+    const data = await lectureUploadModel.find({}).populate("creator", "name");
     console.log(data);
 
     resp.status(200).send({
@@ -46,6 +45,31 @@ export const lectureGetController = async (req, resp) => {
   } catch (error) {
     console.log(error);
     resp.status(501).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getLectureByIdController = async (req, resp) => {
+  try {
+    const { id } = req.params;
+
+    const lecture = await lectureUploadModel.findById(id).populate("creator");
+
+    if (!lecture) {
+      return resp.status(404).send({
+        success: false,
+        message: "Lecture not found",
+      });
+    }
+
+    resp.status(200).send({
+      lecture,
+    });
+  } catch (error) {
+    console.error(error);
+    resp.status(500).send({
       success: false,
       message: error.message,
     });

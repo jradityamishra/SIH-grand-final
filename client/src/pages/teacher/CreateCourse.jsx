@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  Button,
-  TextField,
-  Input,
-  InputLabel,
-  FormControl,
-} from "@mui/material";
+import { Button, TextField, Input, FormControl, Alert } from "@mui/material";
 import Layout from "../../components/layout/Layout";
 import Spinner from "../../components/Spinner";
 import EditorPage from "./EditorPage";
@@ -15,10 +9,10 @@ const CreateCourse = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [video, setVideo] = useState(null);
-  const [link, setLink] = useState("");
+  //const [link, setLink] = useState("");
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState("");
-
+  const [id, setId] = useState("");
   const handleUpload = async () => {
     try {
       setLoading(true);
@@ -26,43 +20,49 @@ const CreateCourse = () => {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("description", description);
-      formData.append("link", link);
+      //formData.append("link", link);
       formData.append("lectureUrl", video);
 
-      const response = await axios.post("api/v1/lectureUpload", formData);
-
-      const videoID = link.replace("https://www.youtube.com/watch?v=", "");
-
-      // Get transcript
-      const transcriptResponse = await axios.get(
-        `api/v1/transcript/${videoID}`
+      const uploadPromise = axios.post(
+        "http://localhost:8000/api/v1/lectureUpload",
+        formData
       );
+
+      const transcriptPromise = axios.post(
+        "http://localhost:8000/api/v1/video/transcript",
+        { description: description }
+      );
+
+      const [uploadResponse, transcriptResponse] = await Promise.all([
+        uploadPromise,
+        transcriptPromise,
+      ]);
 
       if (transcriptResponse.data && transcriptResponse.data.summary) {
         setSummary(transcriptResponse.data.summary);
-        setLoading(false);
       }
 
-      if (response.status === 201) {
+      if (uploadResponse.status === 201) {
         console.log("success");
-
+        setId(uploadResponse.data.upload._id);
         alert("Video upload is successful");
       }
     } catch (error) {
       console.log(error);
+    } finally {
       setLoading(false);
     }
   };
 
   return (
     <Layout>
-      <div className="px-8">
+      <div>
         {loading ? (
           <Spinner />
         ) : summary ? (
-          <EditorPage summary={summary} />
+          <EditorPage summary={summary} id={id} />
         ) : (
-          <>
+          <div className="px-8">
             <h2 className="text-3xl font-semibold text-center">Create Video</h2>
             <form>
               <TextField
@@ -78,6 +78,7 @@ const CreateCourse = () => {
                 margin="normal"
                 multiline
                 rows={2}
+                placeholder="List the topics discussed in the video"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -91,13 +92,13 @@ const CreateCourse = () => {
                 />
               </FormControl>
 
-              <TextField
+              {/* <TextField
                 fullWidth
                 label="Lecture Link"
                 margin="normal"
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
-              />
+              /> */}
 
               <Button
                 variant="contained"
@@ -106,8 +107,15 @@ const CreateCourse = () => {
               >
                 Upload Video
               </Button>
+              <Alert
+                severity="info"
+                className="my-6 w-full md:w-[90%] lg:w-[65%] "
+              >
+                Upon successful video upload, the content material will be
+                automatically generated.
+              </Alert>
             </form>
-          </>
+          </div>
         )}
       </div>
     </Layout>

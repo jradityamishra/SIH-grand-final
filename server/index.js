@@ -47,6 +47,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(8000, () => {
   console.log(`SERVER RUNNING AT PORT ${PORT}`.bgBlue.white);
 });
