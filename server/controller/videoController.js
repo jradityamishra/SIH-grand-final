@@ -6,9 +6,36 @@ import axios from "axios";
 import puppeteer from "puppeteer";
 import { v2 as cloudinary } from "cloudinary";
 import lectureUploadModel from "../models/lectureUploadModel.js";
+import { Student } from "../models/UserModel.js";
+const apiKey = process.env.RAPID_API_KEY;
+
+export const increaseCredits = async (req, res) => {
+  //const id = req.user._id;
+  const { amount } = req.body;
+  const id = "65795816bb271d1f8f394d5f";
+  try {
+    const student = await Student.findById(id);
+
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    student.credits += amount;
+
+    await student.save();
+
+    return res.status(200).json({
+      message: "Credits increased successfully",
+      credits: student.credits,
+    });
+  } catch (error) {
+    console.error("Error increasing credits:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename);
-const apiKey = process.env.RAPID_API_KEY;
+
 //const execAsync = promisify(exec);
 
 export const getTranscript = async (req, res, next) => {
@@ -72,7 +99,7 @@ export const getQuiz = async (req, res, next) => {
   const { id } = req.params;
   const lecture = await lectureUploadModel.findById(id);
   const summary = lecture.summaryContent;
-  const content = `${summary}\nGenerate multiple-choice questions and answers based on the above summary(ignore HTML tags).Create 6 questions, each with 4 options numbered using capital letters only. Return a JSON object without comments and special characters, containing two arrays: one for the multiple-choice questions with their options (MCQs) and the other for their corresponding answers(answers) stating the correct option using capital letters.`;
+  const content = `${summary}\nGenerate multiple-choice questions and answers based on the above summary(ignore HTML tags).Create 6 questions, each with 4 options numbered using capital letters only in an array. Return a JSON object without comments and special characters, containing two arrays: one for the multiple-choice questions with their options (MCQs) and the other for their corresponding answers(answers) stating the correct option using capital letters.`;
   const options = {
     method: "POST",
     url: "https://chatgpt-42.p.rapidapi.com/matag2",
