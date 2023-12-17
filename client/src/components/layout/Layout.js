@@ -5,6 +5,9 @@ import SideNavBar from '../navbar/SideNavBar'
 const Layout = ({children}) => {
   return (
     <div>
+      <Header />
+      <main className="min-h-70 p-24">{children}</main>
+      <Footer />
          <Header/>
         
      <main style={{minHeight:'70vh'}}>
@@ -12,7 +15,7 @@ const Layout = ({children}) => {
     </main>
     <Footer/>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;
