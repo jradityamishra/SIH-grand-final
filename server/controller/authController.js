@@ -48,7 +48,7 @@ export const registerController = async (req, resp, next) => {
 
     let user;
 
-    if (role === "Teacher") {
+    if (role === "teacher") {
       user = await new Teacher({
         name,
         email,
@@ -75,7 +75,7 @@ export const registerController = async (req, resp, next) => {
         school,
       }).save();
     }
-
+    console.log(user);
     resp
       .cookie(
         "access_token",

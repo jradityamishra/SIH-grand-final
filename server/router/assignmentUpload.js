@@ -4,7 +4,11 @@ import {
   assignmentUploadController,
   assignmentGetController,
 } from "../controller/assignmentController.js";
-import { verifyIfStudent } from "../middleware/verifyAuthToken.js";
+import {
+  verifyIfStudent,
+  verifyIfLoggedIn,
+  verifyIfTeacher,
+} from "../middleware/verifyAuthToken.js";
 
 //-------------- ROUTING OBJECT-----------
 const router = express.Router();

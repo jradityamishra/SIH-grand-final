@@ -40,10 +40,12 @@ const teacherSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    subjectsTaught: {
-      type: String,
-      required: true,
-    },
+    subjectsTaught: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
 
     levelOfEducation: {
       type: String,
@@ -54,7 +56,8 @@ const teacherSchema = new mongoose.Schema(
       required: true,
     },
     teacherClass: {
-      type: String,
+      type: Number,
+      required: true,
     },
     coursesTaught: [
       {
@@ -79,7 +82,7 @@ const studentSchema = new mongoose.Schema(
       default: 0,
     },
     studentClass: {
-      type: String,
+      type: Number,
       required: true,
     },
     board: {
@@ -97,5 +100,11 @@ const studentSchema = new mongoose.Schema(
 );
 
 const Student = User.discriminator("Student", studentSchema);
-
+User.collection.getIndexes({}, (err, indexes) => {
+  if (err) {
+    console.error("Error retrieving indexes:", err);
+  } else {
+    console.log("Indexes:", indexes);
+  }
+});
 export { User, Teacher, Student };

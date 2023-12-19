@@ -12,7 +12,7 @@ export const lectureUploadController = async (req, resp) => {
     if (get) {
       const upload = await lectureUploadModel({
         title: title,
-        creator: "657d5fffacbeae883da2fee0",
+        creator: req.user._id,
         description: description,
         lectureUrl: get,
         creator: creator,
@@ -55,7 +55,7 @@ export const lectureGetController = async (req, resp) => {
 export const increaseCredits = async (req, res, next) => {
   try {
     const { courseID } = req.params;
-    const credit = req.body;
+    const { credit } = req.body;
     const lecture = await lectureUploadModel.findById(courseID);
     const studentID = req.user._id;
     if (!lecture) {
