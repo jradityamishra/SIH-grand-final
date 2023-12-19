@@ -20,6 +20,7 @@ const Course = () => {
           "http://localhost:8000/api/v1/lectureUpload/getlecture/"
         );
         setCourses(response.data.data);
+        console.log(response.data.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching courses:", error);

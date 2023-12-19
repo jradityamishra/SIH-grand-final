@@ -153,7 +153,9 @@ const Quiz = () => {
             </p>
           </div>
         )}
-        <Link to="/teacher/courses">Continue learning</Link>
+        {currentQuestionIndex === questions.length - 1 && showResult && (
+          <Link to="/teacher/courses">Continue learning</Link>
+        )}
       </div>
     </Layout>
   );

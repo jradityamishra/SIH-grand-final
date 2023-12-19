@@ -1,60 +1,56 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import {postLiveclassData,getLiveClassData} from '../../redux/liveClassSlice'
-import { toast } from 'react-toastify';
+import {
+  postLiveclassData,
+  getLiveClassData,
+} from "../../redux/liveClassSlice";
+// import { toast } from 'react-toastify';
 const OnlineClass = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector(
-    (state) => state.auth
-  );
-  
-  console.log("techer data:",user.user);
-  const teacherId=user.user._id;
-  console.log(teacherId);
-  const [link, setLink] = useState('');
-  const [description, setDescription] = useState('');
-  const [subject, setSubject] = useState(user.user.subjectsTaught);
-  const [time, setTime] = useState('');
+  const { user } = useSelector((state) => state.auth);
 
-  const formData={
+  console.log("techer data:", user.user);
+  const teacherId = user.user._id;
+  console.log(teacherId);
+  const [link, setLink] = useState("");
+  const [description, setDescription] = useState("");
+  const [subject, setSubject] = useState(user.user.subjectsTaught);
+  const [time, setTime] = useState("");
+
+  const formData = {
     link,
     description,
     subject,
     time,
-   
+  };
 
-  }
-  
-// ================SAVE DATA==================
+  // ================SAVE DATA==================
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-   console.log(formData);
+    console.log(formData);
 
-   try{
-     const res = await axios.post(`/api/v1/liveclass/${teacherId}`,
-     {description:description,
-      joiningLink:link,
-      subject:subject,
-      Time:time
-  })
-    console.log("resget:",res)
-     if(res){
-      toast.success('Your data is Save')
+    try {
+      const res = await axios.post(`/api/v1/liveclass/${teacherId}`, {
+        description: description,
+        joiningLink: link,
+        subject: subject,
+        Time: time,
+      });
+      console.log("resget:", res);
+      if (res) {
+        alert("Your data is Save");
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error.message || "error in saving live Class detail ");
     }
-   }catch(error){
-    console.log(error);
-    toast.error(error.message||'error in saving live Class detail ')
-   }
-
   };
 
   // ================START CLASS==================
 
-  const startclass=()=>{
-
-  }
+  const startclass = () => {};
 
   return (
     <div className="ml-56">
@@ -65,78 +61,114 @@ const OnlineClass = () => {
 
         <div className="container mx-auto mt-10 p-8 bg-white shadow-lg rounded-xl max-w-2xl">
           <div className="mb-6">
-            <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="subject"
+              className="block text-sm font-medium text-gray-700"
+            >
               Subject
             </label>
-            {user.user.role==='Teacher' ? <input
-              id="subject"
-              type="subject"
-              placeholder={user.user.subjectsTaught}
-             value={user.user.subjectsTaught}
-            //  onChange={(e)=>setSubject(e.target.value)}
-              // onChange=(setSubject(value)}
-              className="border p-3 w-full mt-1 rounded-md focus:outline-none focus:ring focus:border-blue-300"
-            />:''}
+            {user.user.role === "Teacher" ? (
+              <input
+                id="subject"
+                type="subject"
+                placeholder={user.user.subjectsTaught}
+                value={user.user.subjectsTaught}
+                //  onChange={(e)=>setSubject(e.target.value)}
+                // onChange=(setSubject(value)}
+                className="border p-3 w-full mt-1 rounded-md focus:outline-none focus:ring focus:border-blue-300"
+              />
+            ) : (
+              ""
+            )}
           </div>
 
           <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
-            <h2 className="text-lg font-semibold mb-2">Additional Information</h2>
+            <h2 className="text-lg font-semibold mb-2">
+              Additional Information
+            </h2>
             <p className="text-gray-700">Student ko dikhega...</p>
           </div>
 
           <div className="mb-6">
-            <label htmlFor="time" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="time"
+              className="block text-sm font-medium text-gray-700"
+            >
               Time
             </label>
-           {user.user.role==='Teacher' ? <input
-              id="time"
-              type="time"
-              value={time}
-              onChange={(e)=>setTime(e.target.value)}
-              className="border p-3 w-full mt-1 rounded-md focus:outline-none focus:ring focus:border-blue-300"
-            />:''}
+            {user.user.role === "Teacher" ? (
+              <input
+                id="time"
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                className="border p-3 w-full mt-1 rounded-md focus:outline-none focus:ring focus:border-blue-300"
+              />
+            ) : (
+              ""
+            )}
           </div>
 
           <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
-            <h2 className="text-lg font-semibold mb-2">Additional Information</h2>
+            <h2 className="text-lg font-semibold mb-2">
+              Additional Information
+            </h2>
             <p className="text-gray-700">Student ko dikhega...</p>
           </div>
 
           <div className="mb-6">
-            <label htmlFor="link" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="link"
+              className="block text-sm font-medium text-gray-700"
+            >
               Paste Links/URLs
             </label>
-           {user.user.role==='Teacher'? <input
-              id="link"
-              type="text"
-              value={link}
-              onChange={(e)=>setLink(e.target.value)}
-              className="border p-3 w-full mt-1 rounded-md focus:outline-none focus:ring focus:border-blue-300"
-              placeholder="Paste links here..."
-            />:''}
+            {user.user.role === "Teacher" ? (
+              <input
+                id="link"
+                type="text"
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+                className="border p-3 w-full mt-1 rounded-md focus:outline-none focus:ring focus:border-blue-300"
+                placeholder="Paste links here..."
+              />
+            ) : (
+              ""
+            )}
           </div>
 
           <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
-            <h2 className="text-lg font-semibold mb-2">Additional Information</h2>
+            <h2 className="text-lg font-semibold mb-2">
+              Additional Information
+            </h2>
             <p className="text-gray-700">Student ko dikhega...</p>
           </div>
 
           <div className="mb-6">
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700"
+            >
               Description
             </label>
-          {user.user.role==='Teacher'?  <textarea
-              id="description"
-              value={description}
-              onChange={(e)=>setDescription(e.target.value)}
-              className="border p-3 w-full mt-1 rounded-md resize-none focus:outline-none focus:ring focus:border-blue-300"
-              rows="6"
-              placeholder="Write your description here..."
-            ></textarea>:''}
+            {user.user.role === "Teacher" ? (
+              <textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="border p-3 w-full mt-1 rounded-md resize-none focus:outline-none focus:ring focus:border-blue-300"
+                rows="6"
+                placeholder="Write your description here..."
+              ></textarea>
+            ) : (
+              ""
+            )}
           </div>
 
           <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
-            <h2 className="text-lg font-semibold mb-2">Additional Information</h2>
+            <h2 className="text-lg font-semibold mb-2">
+              Additional Information
+            </h2>
             <p className="text-gray-700">Student ko dikhega...</p>
           </div>
 
