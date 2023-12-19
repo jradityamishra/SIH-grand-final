@@ -4,6 +4,7 @@ import {
   assignmentUploadController,
   assignmentGetController,
 } from "../controller/assignmentController.js";
+import { verifyIfStudent } from "../middleware/verifyAuthToken.js";
 
 //-------------- ROUTING OBJECT-----------
 const router = express.Router();
@@ -12,9 +13,16 @@ const router = express.Router();
 
 router.post(
   "/",
+  verifyIfLoggedIn,
+  verifyIfStudent,
   uploadAssignment.single("assignmentPdf"),
   assignmentUploadController
 );
-router.get("/assignmentGet", assignmentGetController);
+router.get(
+  "/assignmentGet",
+  verifyIfLoggedIn,
+  verifyIfStudent,
+  assignmentGetController
+);
 
 export default router;

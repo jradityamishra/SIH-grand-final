@@ -59,7 +59,6 @@ const teacherSchema = new mongoose.Schema(
     coursesTaught: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        type: String,
         ref: "Lecture",
       },
     ],

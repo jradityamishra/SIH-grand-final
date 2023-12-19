@@ -2,10 +2,10 @@ import { postObject } from "../helper/s3/S3lectureUpload.js";
 import lectureUploadModel from "../models/lectureUploadModel.js";
 
 export const lectureUploadController = async (req, resp) => {
-  const { title, description,creator } = req.body;
+  const { title, description, creator } = req.body;
   const lectureUrl = req.file;
-  console.log(req.file)
-   const videoname = req.file.originalname;
+  console.log(req.file);
+  const videoname = req.file.originalname;
 
   try {
     const get = await postObject(videoname, lectureUrl);
@@ -15,9 +15,8 @@ export const lectureUploadController = async (req, resp) => {
         creator: "657d5fffacbeae883da2fee0",
         description: description,
         lectureUrl: get,
-        creator:creator
+        creator: creator,
       }).save();
-
 
       if (upload) {
         resp.status(201).send({
@@ -51,6 +50,28 @@ export const lectureGetController = async (req, resp) => {
       success: false,
       message: error.message,
     });
+  }
+};
+export const increaseCredits = async (req, res, next) => {
+  try {
+    const { courseID } = req.params;
+    const credit = req.body;
+    const lecture = await lectureUploadModel.findById(courseID);
+    const studentID = req.user._id;
+    if (!lecture) {
+      return res.status(404).json({ error: "Lecture not found" });
+    }
+
+    lecture.marks.push({
+      user: studentID,
+      credits: credit,
+    });
+
+    await lecture.save();
+
+    res.status(201).json({ success: true });
+  } catch (error) {
+    next(error);
   }
 };
 

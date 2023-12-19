@@ -11,10 +11,10 @@ const Quiz = () => {
   const [showResult, setShowResult] = useState(false);
   const location = useLocation();
   const [score, setScore] = useState(0);
-  const { questions, answers } = location.state;
+  const { questions, answers, id } = location.state;
 
   useEffect(() => {
-    if (!questions || !answers) {
+    if (!questions || !answers || !id) {
       console.error("Questions or answers not found in location state.");
 
       return;
@@ -49,26 +49,28 @@ const Quiz = () => {
   };
 
   const handleQuizSubmit = async () => {
-    const score = questions.reduce((totalScore, question, index) => {
-      return userAnswers[index] === answers[index]
-        ? totalScore + 1
-        : totalScore;
-    }, 0);
-
-    console.log("Score:", score);
-    setShowResult(true);
-    setScore(score);
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/video/credits",
-        {
-          amount: score,
-        }
-      );
+      const score = questions.reduce((totalScore, question, index) => {
+        return userAnswers[index] === answers[index]
+          ? totalScore + 1
+          : totalScore;
+      }, 0);
 
-      console.log("Increase Credits API Response:", response.data);
+      console.log("Score:", score);
+      setShowResult(true);
+      setScore(score);
+
+      const [response1, response2] = await Promise.all([
+        axios.post("http://localhost:8000/api/v1/video/credits", {
+          amount: score,
+        }),
+        axios.post(`http://localhost:8000/api/v1/lectureUpload/credits/${id}`),
+      ]);
+
+      console.log("Increase Credits API Response:", response1.data);
+      console.log("Second API Call Response:", response2.data);
     } catch (error) {
-      console.error("Error making API call to increase credits:", error);
+      console.error("Error making API calls:", error);
     }
   };
 

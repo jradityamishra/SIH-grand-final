@@ -115,6 +115,7 @@ const LectureDetail = () => {
       state: {
         questions: quizData.MCQs,
         answers: quizData.answers,
+        id: id,
       },
     });
   };

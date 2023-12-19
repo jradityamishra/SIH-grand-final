@@ -11,7 +11,17 @@ const LectureSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-<<<<<<< HEAD
+  marks: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
+      },
+      credits: {
+        type: Number,
+      },
+    },
+  ],
   videoLink: {
     type: String,
   },
@@ -21,16 +31,7 @@ const LectureSchema = new mongoose.Schema({
   summaryContent: {
     type: String,
   },
-=======
-  pdfLink: {
-    type: String,
-  },
-  summaryContent:
-  {
-    type:String
-  },
 
->>>>>>> jyotiradityamishra
   lectureUrl: {
     type: String,
     required: true,

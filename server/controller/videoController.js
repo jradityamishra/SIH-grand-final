@@ -12,7 +12,7 @@ const apiKey = process.env.RAPID_API_KEY;
 export const increaseCredits = async (req, res) => {
   //const id = req.user._id;
   const { amount } = req.body;
-  const id = "65795816bb271d1f8f394d5f";
+  const id = req.user._id;
   try {
     const student = await Student.findById(id);
 
@@ -24,7 +24,7 @@ export const increaseCredits = async (req, res) => {
 
     await student.save();
 
-    return res.status(200).json({
+    return res.status(201).json({
       message: "Credits increased successfully",
       credits: student.credits,
     });
