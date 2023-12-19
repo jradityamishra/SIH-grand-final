@@ -14,13 +14,15 @@ export const registerController = async (req, resp, next) => {
       dob,
       role,
       yearsOfExperience,
-      subjects,
+      subject,
       levelOfEducation,
       about,
       studentClass,
+      coursesTaught,
       board,
       school
     } = req.body;
+  
 
     if (!name || !email || !password || !role|| !school) {
       return resp.status(400).send({ message: "All fields are required" });
@@ -46,7 +48,7 @@ export const registerController = async (req, resp, next) => {
 
     let user;
 
-    if (role === "teacher") {
+    if (role === "Teacher") {
       user = await new Teacher({
         name,
         email,
@@ -54,9 +56,11 @@ export const registerController = async (req, resp, next) => {
         dob,
         role,
         yearsOfExperience,
-        subjects,
+        subjectsTaught:subject,
         levelOfEducation,
+        coursesTaught,
         about,
+        school
       }).save();
     } else if (role === "student") {
       user = await new Student({
@@ -70,6 +74,7 @@ export const registerController = async (req, resp, next) => {
         school
       }).save();
     }
+    
     resp
       .cookie(
         "access_token",

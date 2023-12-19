@@ -13,12 +13,12 @@ const SidePanel = () => {
             (state) => state.auth
           )
             const userStudent=user.user;
-          //  console.log(userStudent._id);
+            console.log(userStudent._id);
 
 
     
 // -------------------STATE MANAGEMENT------------------
-
+      const [id, setId] = useState();
       const [loading, setLoading] = useState(false);
       const [selectedUsers, setSelectedUsers] = useState([]);
       const [groups, setGroups] = useState([]);
@@ -31,11 +31,14 @@ const SidePanel = () => {
        const [selectedGroupId, setSelectedGroupId] = useState(null);
      
 
+
+      
+
   // -------------------SET GROUPID IN THE CONTEXT------------------
 
-       const {setGroupId,group}=ChatState();
+       const {setGroupId}=ChatState();
 
-       console.log(group)
+       
       const handleSpanClick = (groupId) => {
         setSelectedGroupId(groupId);
         setGroupId(groupId)
@@ -98,6 +101,8 @@ const SidePanel = () => {
         })
         return;
        }
+       selectedUsers.push(userStudent);
+       console.log("selectuser:",selectedUsers)
        try{
         const {data}=await axios.post(`/api/v1/chat/group`,
        { name:newGroupName,
@@ -141,6 +146,7 @@ const SidePanel = () => {
       try{
         const response = await axios.delete(`/api/v1/chat/delete/${index._id}`);
         console.error(response);
+        
         setGroups((prevGroups) => prevGroups.filter((group) => group._id !== index._id));
             toast('group is deleted', {
               position: 'top-right',
@@ -168,7 +174,15 @@ const SidePanel = () => {
         }
         try {
           const response = await axios.get(`/api/v1/chat/getGroup/${userStudent._id}`);
-      setGroups(response.data);
+          console.log("response", response.data.data);
+          response.data.data.map((g)=>{
+            setId(g.groupAdmin._id)
+            setGroupId(g._id)
+            console.log("data:",g.groupAdmin._id);
+            console.log("myid:",g._id);
+          })
+         
+      setGroups(response.data.data);
      
         } catch (error) {
           console.error(error);
@@ -180,11 +194,11 @@ const SidePanel = () => {
           });
         }
       };
-
       useEffect(() => {
         fetchData();
        // Call the async function
       }, [userStudent._id]);
+     
   return (
     <>
     {/* <div className="flex h-screen bg-gray-100 ml-60"> */}
@@ -192,28 +206,30 @@ const SidePanel = () => {
        <div className="w-1/4 bg-gray-200 p-4">
       
         <h2 className="text-2xl font-semibold mb-4">Groups</h2>
-      {  group===userStudent._id  ?  <button
+       {  id===userStudent._id  ?   
+      <button
           className="w-full py-2 mb-4 bg-green-500 text-white rounded-full hover:bg-green-600"
           onClick={handleCreateGroup}
         >
           + Create Group
-        </button>:''}
+        </button>
+         :''} 
         <ul>
           {groups.map((g, index) => (
             <li
               key={g._id}
               className="mb-2 flex items-center justify-between cursor-pointer hover:bg-gray-300 p-2 rounded-md"
             >
-              {/* onClick={() => handleSpanClick(group._id)} */}
-              <span onClick={() => handleSpanClick(g._id)}>{g.chatName}</span>
-             { group===userStudent._id  ? <button
+               {/* onClick={() => handleSpanClick(group._id)} */}
+               <span onClick={() => handleSpanClick(g._id)}>{g.chatName}</span>
+             { id===userStudent._id  ? <button
                 className="p-1 bg-red-400 text-white rounded-full hover:bg-red-600"
                 onClick={() => handleDeleteGroup(g)}
               > 
                 &#x2715;
               </button>: ''}
             </li>
-          ))}
+          ))}  
         </ul>
       </div>
 

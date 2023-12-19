@@ -15,6 +15,7 @@ import CollabDetail from "./pages/teacher/CollabDetail";
 import CourseDetail from "./pages/teacher/CourseDetail";
 import Analysis from "./pages/Analysis";
 import Profile from "./pages/teacher/Profile";
+import OnlineClass from './pages/teacher/OnlineClass.jsx'
 const App = () => {
   return (
     <>
@@ -26,6 +27,7 @@ const App = () => {
         <Route path='/teachersignup' element={<TeacherSignup />} />
         <Route path='/studentsignup' element={<StudentSignup />} />
         <Route path="/" element={<Landing />} />
+        <Route path="/onlineclass" element={<OnlineClass />} />
 
         <Route path="/profile" element={<Profile />} />
 

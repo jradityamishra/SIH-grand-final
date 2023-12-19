@@ -45,7 +45,7 @@ export const mainListItems = (
         <ListItemText primary="Analysis" />
       </ListItemButton>
     </Link>
-    <Link to="/teacher/mentorship">
+    <Link to="/chat">
       <ListItemButton>
         <ListItemIcon>
           <LayersIcon />

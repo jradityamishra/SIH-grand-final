@@ -11,6 +11,14 @@ const LectureSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  pdfLink: {
+    type: String,
+  },
+  summaryContent:
+  {
+    type:String
+  },
+
   lectureUrl: {
     type: String,
     required: true,

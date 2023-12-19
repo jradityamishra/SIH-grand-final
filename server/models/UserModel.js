@@ -40,12 +40,12 @@ const teacherSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    subjects: [
+    subjectsTaught: 
       {
         type: String,
         required: true,
       },
-    ],
+    
     levelOfEducation: {
       type: String,
       required: true,
@@ -54,12 +54,12 @@ const teacherSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    coursesTaught: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
+    coursesTaught:  [{
+        // type: mongoose.Schema.Types.ObjectId,
+        type:String,
         ref: "Lecture",
-      },
-    ],
+      }],
+    
   },
   { timestamps: true }
 );
