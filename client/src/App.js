@@ -24,7 +24,8 @@ import StDashboard from "./pages/student/StDashboard";
 import StCourse from "./pages/student/StCourse";
 import StMentorship from "./pages/student/StMentorship";
 import StAnalysis from "./pages/student/StAnalysis";
-
+import OnlineClass from "./pages/teacher/OnlineClass.jsx";
+import QuizPage from "./pages/teacher/QuizPage";
 const App = () => {
   return (
     <div>

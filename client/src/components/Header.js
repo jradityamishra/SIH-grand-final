@@ -11,13 +11,11 @@ import MuiDrawer from "@mui/material/Drawer";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import { mainListItems, secondaryListItems } from "./ListItems";
-
 import {
   mainListItems,
   secondaryListItems,
   studentListItems,
-} from "../ListItems";
+} from "./ListItems";
 import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
