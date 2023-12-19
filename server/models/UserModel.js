@@ -54,6 +54,10 @@ const teacherSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    teacherFeedback: {
+      type:Number,
+      default:"0"
+    },
     coursesTaught:  [{
         // type: mongoose.Schema.Types.ObjectId,
         type:String,
@@ -61,6 +65,7 @@ const teacherSchema = new mongoose.Schema(
       }],
     
   },
+  
   { timestamps: true }
 );
 

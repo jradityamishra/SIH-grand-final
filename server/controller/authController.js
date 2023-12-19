@@ -1,6 +1,7 @@
 import {User,Teacher,Student} from "../models/UserModel.js";
 import { hashPassword, comparePassword } from "../helper/auth/authHelper.js";
 import generateAuthToken from "../helper/auth/generateAuthToken.js";
+
 // import {Student} from "../models/UserModel.js";
 
 //-------------- REGISTER USER-----------
@@ -168,3 +169,31 @@ export const loginController = async (req, resp) => {
     resp.send(users);
   } 
        
+
+  // SAVE THE FEEDBACK OF TEACHER
+
+
+  export const feedback=async(req,resp)=>{
+    const {rating}=req.body;
+    console.log(rating);
+    try{
+      const data=await Teacher.findByIdAndUpdate(req.params.teacherId,
+        {teacherFeedback:rating});
+      console.log(data);
+      if (!data) {
+        return res.status(404).json({ message: 'Teacher not found' });
+      }
+      resp.status(200).send({
+        success:true,
+        message:"rating is done",
+        data
+      })
+  
+     
+  
+      // Save the updated teacher document
+      
+    }catch(error){
+
+    }
+  }

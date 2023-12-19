@@ -12,8 +12,17 @@ import Chart from "../../components/Chart";
 import Deposits from "../../components/Deposits";
 import Orders from "../../components/Orders";
 import Layout from "../../components/layout/Layout";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
 function Copyright(props) {
+  const { user } = useSelector(
+    (state) => state.auth
+  );
+  
+  
+
+
   return (
     <Typography
       variant="body2"
@@ -74,7 +83,7 @@ export default function Dashboard() {
                       height: 240,
                     }}
                   >
-                    <Deposits />
+                    <Deposits  />
                   </Paper>
                 </Grid>
                 {/* Recent Orders */}
@@ -82,7 +91,7 @@ export default function Dashboard() {
                   <Paper
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
-                    <Orders />
+                    {/* <Orders /> */}
                   </Paper>
                 </Grid>
               </Grid>

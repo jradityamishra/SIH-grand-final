@@ -1,88 +1,197 @@
-import React, { useState } from "react";
-import { useParams } from "react-router";
-import { Card, CardContent, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Card, CardContent, Typography, Button } from "@mui/material";
 import Layout from "../../components/layout/Layout";
+import axios from "axios";
+import Spinner from "../../components/Spinner";
 
-const CourseDetail = () => {
+import DownloadIcon from "@mui/icons-material/Download";
+
+const LectureDetail = () => {
   const { id } = useParams();
-  // useEffect(() => {
-  //   setLoading(true);
-  //   axios
-  //     .get(`http://localhost:5000/teacher/courses/${id}`)
-  //     .then((response) => {
-  //       setVariable(response.data);
-  //       setLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       setLoading(false);
-  //     });
-  // }, []);
+  const navigate = useNavigate();
+  const [lectureData, setLectureData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [videoEnded, setVideoEnded] = useState(true);
+  const [quizData, setQuizData] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          ` /api/v1/lectureUpload/getlecturedetails/${id}`
+        );
+        setLectureData(response.data.lecture);
+        setLoading(false);
+        const response1 = await axios.get(
+          `  /api/v1/video/quiz/${id}`
+        );
+        // const response1 = {
+        //   data: {
+        //     MCQs: [
+        //       {
+        //         question:
+        //           "What is light considered as in the Corpuscular Theory?",
+        //         options: [
+        //           "A. Waves",
+        //           "B. Particles called corpuscles",
+        //           "C. Energy",
+        //           "D. Photons",
+        //         ],
+        //       },
+        //       {
+        //         question:
+        //           "What property of light is evident in shadows and camera obscura?",
+        //         options: [
+        //           "A. Diffraction",
+        //           "B. Interference",
+        //           "C. Rectilinear Propagation",
+        //           "D. Reflection",
+        //         ],
+        //       },
+        //       {
+        //         question:
+        //           "What happens when light encounters an obstacle or aperture?",
+        //         options: [
+        //           "A. It stops",
+        //           "B. It bends and spreads out",
+        //           "C. It reflects",
+        //           "D. It disappears",
+        //         ],
+        //       },
+        //       {
+        //         question: "What happens when two light waves overlap?",
+        //         options: [
+        //           "A. They cancel each other out",
+        //           "B. They interfere constructively or destructively",
+        //           "C. They form a rainbow",
+        //           "D. They increase in intensity",
+        //         ],
+        //       },
+        //       {
+        //         question: "What do the laws of reflection state?",
+        //         options: [
+        //           "A. The angle of incidence equals the angle of reflection",
+        //           "B. Light travels in straight lines",
+        //           "C. Light bends and spreads out when it encounters an obstacle",
+        //           "D. Light can interfere constructively or destructively",
+        //         ],
+        //       },
+        //       {
+        //         question: "Who proposed the Corpuscular Theory of Light?",
+        //         options: [
+        //           "A. Einstein",
+        //           "B. Newton",
+        //           "C. Maxwell",
+        //           "D. Planck",
+        //         ],
+        //       },
+        //     ],
+        //     answers: ["B", "C", "B", "B", "A", "B"],
+        //   },
+        // };
+
+        if (response1.status === 200 && quizData === "") {
+          setQuizData(response1.data);
+          console.log("Quiz generation successful", response1.data);
+          console.log("MCQ answers:");
+          console.log(response1.data.answers);
+          response1.data.MCQs.forEach((question) => {
+            console.log(question.question);
+            console.log(question.options);
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching lecture details:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  const handleQuizButtonClick = () => {
+    navigate(`/quiz/${id}`, {
+      state: {
+        questions: quizData.MCQs,
+        answers: quizData.answers,
+        id: id,
+      },
+    });
+  };
+
+  const handleVideoEnd = () => {
+    setVideoEnded(true);
+  };
 
   return (
     <Layout>
-      <div className=" justify-center m-8">
-        <Card className="flex flex-col md:flex-row md:justify-evenly  justify-center">
+      <div className="justify-center m-8">
+        {loading ? (
+          <Spinner />
+        ) : (
           <div>
-            <CardContent>
-              <Typography variant="h4" gutterBottom>
-                Lecture Topic
-              </Typography>
-              <Typography variant="body1" paragraph>
-                Lecture Description goes here. Provide all the details about the
-                event.
-              </Typography>
-              <Typography variant="subtitle1" paragraph>
-                Duration: X hours
-              </Typography>
-            </CardContent>
-          </div>
-          <div>
-            <img
-              src="https://img.freepik.com/free-vector/technology-conference-poster-template_1361-1297.jpg?w=1060&t=st=1702557183~exp=1702557783~hmac=fc0c57f92778b6ae6cc34bbea6e7d2e11b83b64ac4e262fbc033247f7e426623"
-              alt="Event Banner"
-              className=" h-64 object-cover"
-            />
-          </div>
-        </Card>
-        <div className="flex justify-center mx-auto my-8">
-          <iframe
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/erEgovG9WBs?si=yizHkLmT5545s055"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
-        </div>
-        <div>
-          <Typography variant="subtitle1" paragraph>
-            <h4>Summary</h4>
-            In a corner, a group of friends gathered, their laughter echoing in
-            the cozy space. A writer, seeking inspiration, sat alone by the
-            window, penning down thoughts in a worn-out notebook. Outside, the
-            rain started to fall, tapping on the windowpane like a gentle
-            melody. The cafe became a refuge, a haven where stories unfolded and
-            dreams took flight. As the evening unfolded, strangers became
-            friends, and the cafe transformed into a microcosm of shared
-            experiences. Each sip of coffee held the promise of new beginnings,
-            and the world outside faded away, leaving behind a mosaic of
-            conversations and connections."
-          </Typography>
-          <Typography variant="subtitle1" paragraph>
-            Questions:
-            <p>q1q1q1q1q1q1q1q1q1q1q1q1</p>
-            <p>q1q1q1q1q1q1q1q1q1q1q1q1</p>
-            <p>q1q1q1q1q1q1q1q1q1q1q1q1</p>
-            <p>q1q1q1q1q1q1q1q1q1q1q1q1</p>
-            <p>q1q1q1q1q1q1q1q1q1q1q1q1</p>
-            <p>q1q1q1q1q1q1q1q1q1q1q1q1</p>
-          </Typography>
-        </div>
-      </div>
-    </Layout>
+            <Card className="flex flex-col md:flex-row md:justify-evenly justify-center">
+              <div>
+                <CardContent>
+                  <Typography variant="h4" gutterBottom>
+                    Lecture Topic: {lectureData.title}
+                  </Typography>
+                  <Typography variant="body1" paragraph>
+                    Lecture Description: {lectureData.description}
+                  </Typography>
+                  <Typography variant="subtitle1" paragraph>
+                    Creator: {lectureData.creator.name}
+                  </Typography>
+                  <Typography variant="subtitle1" paragraph>
+                    Creator's Experience:{" "}
+                    {lectureData.creator.yearsOfExperience} years
+                  </Typography>
+                  <Typography variant="subtitle1" paragraph>
+                    Subjects Taught: {lectureData.creator.subjects.join(", ")}
+                  </Typography>
+                  <Typography variant="subtitle1" paragraph>
+                    <a href={`${lectureData.pdfLink.replace(
+                      "/upload/",
+                      `/upload/fl_attachment:${lectureData.title}`
+                      )}`}
+                      className="font-bold p-2 shadow-md rounded-md"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      download={`${lectureData.title}.pdf`}
+                    >
+                      <DownloadIcon className="mr-2 " />
+                      Download PDF
+                    </a>
+                  </Typography>
+                  {videoEnded && quizData && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleQuizButtonClick}
+                    >
+                      Do you want to answer questions on this topic?
+                    </Button>
+                  )}
+                </CardContent>
+              </div>
+              <div>
+                <video
+                  width="560"
+                  height="315"
+                  controls
+                  src={lectureData.lectureUrl}
+                  title="Lecture Video"
+                  onEnded={handleVideoEnd}
+                ></video>
+              </div>
+            </Card>
+    </div>
+  )
+}
+      </div >
+    </Layout >
   );
 };
 
-export default CourseDetail;
+export default LectureDetail;

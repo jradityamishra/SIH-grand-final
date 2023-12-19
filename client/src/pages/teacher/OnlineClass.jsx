@@ -1,60 +1,80 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
-import {postLiveclassData,getLiveClassData} from '../../redux/liveClassSlice'
+import { postLiveclassData, getLiveClassData } from '../../redux/liveClassSlice'
 import { toast } from 'react-toastify';
 const OnlineClass = () => {
   const dispatch = useDispatch();
   const { user } = useSelector(
     (state) => state.auth
   );
-  
-  console.log("techer data:",user.user);
-  const teacherId=user.user._id;
+
+
+  const teacherId = user.user._id;
+  // ================ DATE==================
+  const formattedDate = new Date().toISOString().split('T')[0]
+
   console.log(teacherId);
   const [link, setLink] = useState('');
   const [description, setDescription] = useState('');
   const [subject, setSubject] = useState(user.user.subjectsTaught);
   const [time, setTime] = useState('');
+  const [saveLink, setsaveLink] = useState([]);
+  const [rating, setRating] = useState(null);
 
-  const formData={
-    link,
-    description,
-    subject,
-    time,
-   
+  const handleRatingChange = (value) => {
+    setRating(value);
+  };
+  // ================SAVE DATA==================
 
-  }
-  
-// ================SAVE DATA==================
-
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-   console.log(formData);
-
-   try{
-     const res = await axios.post(`/api/v1/liveclass/${teacherId}`,
-     {description:description,
-      joiningLink:link,
-      subject:subject,
-      Time:time
-  })
-    console.log("resget:",res)
-     if(res){
-      toast.success('Your data is Save')
+    try {
+      const res = await axios.post(`/api/v1/liveclass/${teacherId}`,
+        {
+          description: description,
+          joiningLink: link,
+          subject: subject,
+          Time: time
+        })
+      // console.log("resget:",res)
+      if (res) {
+        toast.success('Your data is Save')
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message || 'error in saving live Class detail ')
     }
-   }catch(error){
-    console.log(error);
-    toast.error(error.message||'error in saving live Class detail ')
-   }
 
   };
 
   // ================START CLASS==================
 
-  const startclass=()=>{
+  const startclass = async () => {
+
+    try {
+      const res = await axios.get('/api/v1/liveclass/get')
+      res.data.data.map((e) => {
+        console.log(e)
+        setsaveLink(e);
+
+      })
+
+      if (res) {
+        toast.success('Your data is Save')
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message || 'error in saving live Class detail ')
+    }
 
   }
+
+  // =============RATING BUTTON=============
+  
+  useEffect(() => {
+    startclass()
+  }, [])
 
   return (
     <div className="ml-56">
@@ -66,100 +86,135 @@ const OnlineClass = () => {
         <div className="container mx-auto mt-10 p-8 bg-white shadow-lg rounded-xl max-w-2xl">
           <div className="mb-6">
             <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
-              Subject
+              subject
             </label>
-            {user.user.role==='Teacher' ? <input
+            {user.user.role === 'Teacher' ? <input
               id="subject"
               type="subject"
               placeholder={user.user.subjectsTaught}
-             value={user.user.subjectsTaught}
-            //  onChange={(e)=>setSubject(e.target.value)}
+              value={user.user.subjectsTaught}
+              //  onChange={(e)=>setSubject(e.target.value)}
               // onChange=(setSubject(value)}
               className="border p-3 w-full mt-1 rounded-md focus:outline-none focus:ring focus:border-blue-300"
-            />:''}
+            /> : ''}
           </div>
 
           <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
-            <h2 className="text-lg font-semibold mb-2">Additional Information</h2>
-            <p className="text-gray-700">Student ko dikhega...</p>
+            <h2 className="text-lg font-semibold mb-2">Subject</h2>
+            <p className="text-gray-700">{saveLink.subject}</p>
           </div>
 
           <div className="mb-6">
             <label htmlFor="time" className="block text-sm font-medium text-gray-700">
               Time
             </label>
-           {user.user.role==='Teacher' ? <input
+            {user.user.role === 'Teacher' ? <input
               id="time"
               type="time"
               value={time}
-              onChange={(e)=>setTime(e.target.value)}
+              onChange={(e) => setTime(e.target.value)}
               className="border p-3 w-full mt-1 rounded-md focus:outline-none focus:ring focus:border-blue-300"
-            />:''}
+            /> : ''}
           </div>
 
           <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
-            <h2 className="text-lg font-semibold mb-2">Additional Information</h2>
-            <p className="text-gray-700">Student ko dikhega...</p>
+            <h2 className="text-lg font-semibold mb-2">Today's Lecture Time</h2>
+            <p className="text-gray-700">{saveLink.Timing}</p>
           </div>
 
           <div className="mb-6">
-            <label htmlFor="link" className="block text-sm font-medium text-gray-700">
+            {user.user.role === 'Teacher' ? <label htmlFor="link" className="block text-sm font-medium text-gray-700">
               Paste Links/URLs
-            </label>
-           {user.user.role==='Teacher'? <input
+            </label> : ''}
+            {user.user.role === 'Teacher' ? <input
               id="link"
               type="text"
               value={link}
-              onChange={(e)=>setLink(e.target.value)}
+              onChange={(e) => setLink(e.target.value)}
               className="border p-3 w-full mt-1 rounded-md focus:outline-none focus:ring focus:border-blue-300"
               placeholder="Paste links here..."
-            />:''}
+            /> : ''}
           </div>
 
-          <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
+          {/* <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
             <h2 className="text-lg font-semibold mb-2">Additional Information</h2>
             <p className="text-gray-700">Student ko dikhega...</p>
-          </div>
+          </div> */}
 
           <div className="mb-6">
             <label htmlFor="description" className="block text-sm font-medium text-gray-700">
               Description
             </label>
-          {user.user.role==='Teacher'?  <textarea
+            {user.user.role === 'Teacher' ? <textarea
               id="description"
               value={description}
-              onChange={(e)=>setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
               className="border p-3 w-full mt-1 rounded-md resize-none focus:outline-none focus:ring focus:border-blue-300"
               rows="6"
               placeholder="Write your description here..."
-            ></textarea>:''}
+            ></textarea> : ''}
           </div>
 
           <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
-            <h2 className="text-lg font-semibold mb-2">Additional Information</h2>
-            <p className="text-gray-700">Student ko dikhega...</p>
+            <h2 className="text-lg font-semibold mb-2">Today topic Description</h2>
+            <p className="text-gray-700">{saveLink.description}</p>
           </div>
 
           <div className="flex justify-between">
-            <button
+            {user.user.role === 'Teacher' ? <button
               className="bg-blue-600 text-white mt-4 py-4 px-10 text-xl rounded-md font-bold hover:bg-red-700 focus:outline-none focus:ring focus:border-blue-300"
               onClick={handleSubmit}
             >
               Save Data
-            </button>
+            </button> : ''}
             <button
               className="bg-blue-600 text-white mt-4 py-4 px-10 text-xl rounded-md font-bold hover:bg-red-700 focus:outline-none focus:ring focus:border-blue-300"
-              onClick={startclass}
+              onClick={() => window.open(saveLink.joiningLink)}
             >
               Start your Class
             </button>
           </div>
+
+          {/* rating */}
+
+          <div className="flex justify-center p-10">
+      {[1, 2, 3, 4, 5].map((value) => (
+        <label key={value} className="flex items-center cursor-pointer">
+          <input
+            type="radio"
+            name="rating"
+            value={value}
+            checked={rating === value}
+            onChange={() => handleRatingChange(value)}
+            className="sr-only"
+          />
+          <svg
+            className={`w-8 h-8 ms-3 ${
+              rating && value <= rating ? 'text-yellow-300' : 'text-gray-300 dark:text-gray-500'
+            }`}
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 22 20"
+          >
+            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+          </svg>
+        </label>
+      ))}
+      {rating && <p className="ml-2">You rated {rating} stars.</p>}
+    </div>
         </div>
+
+
 
         <div className="bg-blue-500 text-white py-4 text-center mt-10">
           <p>&copy; 2023 Live Classes. All rights reserved.</p>
         </div>
       </div>
+
+
+
+
     </div>
   );
 };
