@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieparser from "cookie-parser";
 import { fileURLToPath } from "url";
 import bodyParser from "body-parser";
 import colors from "colors";
@@ -17,6 +18,7 @@ const __dirname = dirname(__filename);
 const app = express();
 //MIDDLEWARE
 app.use(cors());
+app.use(cookieparser());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
@@ -47,6 +49,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(8000, () => {
+app.listen(PORT, () => {
   console.log(`SERVER RUNNING AT PORT ${PORT}`.bgBlue.white);
 });

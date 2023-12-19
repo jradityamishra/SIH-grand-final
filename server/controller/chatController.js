@@ -1,5 +1,5 @@
 import Chat from "../models/chatModel.js"
-import User from "../models/userModel.js"
+import {User} from "../models/UserModel.js"
 
 
 export const accessChatController = async (req, res) => {
@@ -84,7 +84,7 @@ export const creatGroupChatController=async(req,resp)=>{
       .send("More than 2 users are required to form a group chat");
   }
 
-  users.push(req.user);
+  users.push(req.users);
 
   try {
     const groupChat = await Chat.create({
@@ -103,6 +103,38 @@ export const creatGroupChatController=async(req,resp)=>{
     resp.status(400);
     throw new Error(error.message);
   }
+}
+
+// get group
+export const getGroupChatController=async(req,resp)=>{
+const user_id=req.params.id;
+console.log("betichod",user_id)
+
+try {
+  const data=await Chat.find({ users: { $elemMatch: { $eq: req.params.id } } })
+  .populate("users","-password")
+  .populate("groupAdmin", "-password");
+//     .populate("latestMessage")
+//     .sort({updatedAt:-1})
+    // .then(async (result)=>{
+    //   result = await User.populate(result, {
+    //     path: "latestMessage.sender",
+    //     select:"firstName LastName email"
+    
+    //   });
+      // console.log(data);
+      resp.status(200).send({
+        success:true,
+        message:"got group succssfully",
+        data,
+      });
+    // })
+} catch (error) {
+  resp.status(500).send({
+    success:false,
+    message:error.message
+  })
+}
 }
 
 export const renameGroupChatController=async(req,resp)=>{
@@ -129,6 +161,26 @@ export const renameGroupChatController=async(req,resp)=>{
   } else {
     resp.json(updatedChat);
   }
+}
+
+// delete group
+
+export const deleteGroupChatController=async(req,resp)=>{
+  const groupAdmin=req.params.id;
+ console.log(groupAdmin)
+ try{
+  const deletedGroup = await Chat.findByIdAndDelete( groupAdmin );
+
+    if (!deletedGroup) {
+      return resp.status(404).json({ success: false, message: 'Group not found' });
+    }
+
+    resp.status(200).send({ success: true, message: 'Group deleted successfully', deletedGroup });
+ }catch(error){
+  console.error(error);
+  resp.status(500).json({ success: false, message: error.message });
+
+ }
 }
 
 export const addToGroupController=async(req,resp)=>{

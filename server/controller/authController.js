@@ -1,10 +1,11 @@
 import { User, Teacher, Student } from "../models/UserModel.js";
 import { hashPassword, comparePassword } from "../helper/auth/authHelper.js";
 import generateAuthToken from "../helper/auth/generateAuthToken.js";
+// import {Student} from "../models/UserModel.js";
 
 //-------------- REGISTER USER-----------
 
-export const registerUser = async (req, resp, next) => {
+export const registerController = async (req, resp, next) => {
   try {
     const {
       name,
@@ -13,14 +14,16 @@ export const registerUser = async (req, resp, next) => {
       dob,
       role,
       yearsOfExperience,
-      subjects,
+      subject,
       levelOfEducation,
       about,
       studentClass,
+      coursesTaught,
       board,
+      school,
     } = req.body;
 
-    if (!name || !email || !password || !role) {
+    if (!name || !email || !password || !role || !school) {
       return resp.status(400).send({ message: "All fields are required" });
     }
 
@@ -44,7 +47,7 @@ export const registerUser = async (req, resp, next) => {
 
     let user;
 
-    if (role === "teacher") {
+    if (role === "Teacher") {
       user = await new Teacher({
         name,
         email,
@@ -52,9 +55,11 @@ export const registerUser = async (req, resp, next) => {
         dob,
         role,
         yearsOfExperience,
-        subjects,
+        subjectsTaught: subject,
         levelOfEducation,
+        coursesTaught,
         about,
+        school,
       }).save();
     } else if (role === "student") {
       user = await new Student({
@@ -65,8 +70,10 @@ export const registerUser = async (req, resp, next) => {
         dob,
         studentClass,
         board,
+        school,
       }).save();
     }
+
     resp
       .cookie(
         "access_token",
@@ -91,17 +98,18 @@ export const registerUser = async (req, resp, next) => {
 
 //-------------- LOGIN USER-----------
 
-export const loginUser = async (req, resp, next) => {
+export const loginController = async (req, resp) => {
   try {
     const { email, password } = req.body;
-    // validation
+    //validation
     if (!email || !password) {
       return resp.status(404).send({
         success: false,
-        message: "Invalid email or password",
+        message: "invalid email or password",
       });
     }
-    // check user
+    //check user
+
     const user = await User.findOne({ email });
     if (!user) {
       return resp.status(404).send({
@@ -127,13 +135,29 @@ export const loginUser = async (req, resp, next) => {
         }
       )
       .status(201)
-      .json({
-        _id: user._id,
-        name: user.name,
-        role: user.role,
-        email: user.email,
+      .send({
+        success: true,
+        message: "login successfully",
+        user,
       });
   } catch (error) {
     next(error);
   }
+};
+
+// /api/user?search=
+
+export const getUser = async (req, resp) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { firstName: { $regex: req.query.search, $options: "i" } },
+          { class: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const users = await User.find({ ...keyword, _id: { $ne: req.user._id } }); //except this user retun me all id
+
+  resp.send(users);
 };

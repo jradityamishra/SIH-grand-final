@@ -11,6 +11,7 @@ const LectureSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+<<<<<<< HEAD
   videoLink: {
     type: String,
   },
@@ -20,6 +21,16 @@ const LectureSchema = new mongoose.Schema({
   summaryContent: {
     type: String,
   },
+=======
+  pdfLink: {
+    type: String,
+  },
+  summaryContent:
+  {
+    type:String
+  },
+
+>>>>>>> jyotiradityamishra
   lectureUrl: {
     type: String,
     required: true,
