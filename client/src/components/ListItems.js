@@ -10,7 +10,8 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import LayersIcon from "@mui/icons-material/Layers";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { Link } from "react-router-dom";
-
+import { Divider } from "@mui/material";
+import GrainIcon from "@mui/icons-material/Grain";
 export const mainListItems = (
   <React.Fragment>
     <Link to="/teacher/dashboard">
@@ -168,5 +169,51 @@ export const secondaryListItems = (
         </ListItemButton>
       </Link>
     ))}
+    <Divider />
+    <Link to="/teacher/generate">
+      <ListItemButton>
+        <ListItemIcon>
+          <GrainIcon />
+        </ListItemIcon>
+        <ListItemText primary="AI tools" />
+      </ListItemButton>
+    </Link>
+  </React.Fragment>
+);
+
+export const studentListItems = (
+  <React.Fragment>
+    <Link to="/student/dashboard">
+      <ListItemButton>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItemButton>
+    </Link>
+    <Link to="/student/courses">
+      <ListItemButton>
+        <ListItemIcon>
+          <ShoppingCartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Courses" />
+      </ListItemButton>
+    </Link>
+    <Link to="/student/analysis">
+      <ListItemButton>
+        <ListItemIcon>
+          <BarChartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Analysis" />
+      </ListItemButton>
+    </Link>
+    <Link to="/student/mentorship">
+      <ListItemButton>
+        <ListItemIcon>
+          <LayersIcon />
+        </ListItemIcon>
+        <ListItemText primary="Mentorship" />
+      </ListItemButton>
+    </Link>
   </React.Fragment>
 );

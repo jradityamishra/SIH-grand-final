@@ -12,6 +12,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { mainListItems, secondaryListItems } from "./ListItems";
+
+import {
+  mainListItems,
+  secondaryListItems,
+  studentListItems,
+} from "../ListItems";
 import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -63,6 +69,7 @@ const Drawer = styled(MuiDrawer, {
 
 const Header = () => {
   const [open, setOpen] = React.useState(true);
+  const teacher = false;
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -119,6 +126,7 @@ const Header = () => {
         </Toolbar>
         <Divider />
         <List component="nav">
+          {/* {teacher ? mainListItems : studentListItems} */}
           {mainListItems}
           <Divider sx={{ my: 1 }} />
           {secondaryListItems}
