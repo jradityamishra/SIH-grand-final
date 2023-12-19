@@ -5,6 +5,7 @@ import Spinner from "../../components/Spinner"
 import toast from 'react-hot-toast';
 import { register, reset} from "../../redux/authSlice";
 import Layout from '../../components/layout/Layout';
+import photo from '../../assets/Home.png'
 
 const Signup = () => {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [dob,setDob] = useState('');
   const [about, setAbout] = useState('');
-  const [subject, setSubject] = useState(['']);
+  const [subject, setSubject] = useState([]);
   const [yearsOfExperience, setYearsOfExperience] = useState('');
   const [levelOfEducation, setLevelOfEducation] = useState();
   const [coursesTaught, setCoursesTaught] = useState('');
@@ -59,13 +60,11 @@ const Signup = () => {
    }, [user, isError, message, isSuccess, dispatch, navigate]);
   
   return (
-    <Layout>
-      {isLoading && <Spinner/>}
-      <div className='flex justify-center items-center 'style={{
-      backgroundImage: "",
-      backgroundSize: 'cover',
-    }} >
-      <div className='w-full max-w-md px-6 py-4 rounded-md bg-white border-2 border-gray-200 mx-auto shadow-lg'>
+   <>
+     {isLoading && <Spinner/>}
+      <div className='flex justify-center items-center 'style={{ backgroundImage: `url(${photo})`,backgroundSize: 'cover',  backgroundPosition: 'right', height: '180vh'
+  }} >
+      <div className='w-11/12 max-w-[600px]  px-10 py-10 absolute top-10 left-10 rounded-3xl bg-white border-2 border-gray-100'>
         <div className='flex items-center mb-4'>
           <img
             src='https://www.theindianwire.com/wp-content/uploads/2019/01/IIT-Bombay.png'
@@ -75,7 +74,7 @@ const Signup = () => {
         </div>
 
         <h2 className='text-2xl font-semibold text-center mb-4'>
-          Register an Account
+          Register an Teacher
         </h2>
         <p className='text-sm text-gray-500 text-center mb-6'>
           Please enter your details.
@@ -198,13 +197,13 @@ const Signup = () => {
 
         <div className='mt-4 text-center text-gray-600'>
           Already have an account?{' '}
-          <a href='' className='text-indigo-500 hover:underline'>
+          <a onClick={()=>navigate('/login')} href='' className='text-indigo-500 hover:underline'>
             Log in here
           </a>
         </div>
       </div>
     </div>
-    </Layout>
+    </>
   );
 };
 

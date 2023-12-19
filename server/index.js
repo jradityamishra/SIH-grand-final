@@ -12,6 +12,7 @@ import assignment from './router/assignmentUpload.js'
 import chat from './router/chatRoutes.js'
 import apiRoute from "./router/apiRoute.js"
 import messageRoute from './router/messageRoute.js'
+import liveClass from './router/liveClassRoute.js'
 import path, { dirname } from "path";
 //configure env
 dotenv.config()
@@ -37,6 +38,7 @@ app.use('/api/v1/assignmentUpload',assignment);
 app.use('/api/v1/chat',chat);
 app.use('/api/v1/message',messageRoute);
 app.use("/api/v1", apiRoute);
+app.use("/api/v1/liveclass",liveClass);
 
 // DATABASE CONNECTION
 connection();

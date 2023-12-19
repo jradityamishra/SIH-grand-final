@@ -76,7 +76,11 @@ const ChatBoxScreen = () => {
       };
 
       useEffect(() => {
-        fetchData();
+        // console.log("groupid:",groupId)
+        if(groupId){
+          fetchData();
+        }
+        //  fetchData();
        // Call the async function
        
       }, [myuser,groupId,newMessage]);

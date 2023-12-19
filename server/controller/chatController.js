@@ -107,21 +107,33 @@ export const creatGroupChatController=async(req,resp)=>{
 
 // get group
 export const getGroupChatController=async(req,resp)=>{
-const groupAdmin=req.params.id;
-console.log(groupAdmin)
+const user_id=req.params.id;
+console.log("betichod",user_id)
 
-try{
-  const data=await Chat.find({
-    groupAdmin: groupAdmin,
+try {
+  const data=await Chat.find({ users: { $elemMatch: { $eq: req.params.id } } })
+  .populate("users","-password")
+  .populate("groupAdmin", "-password");
+//     .populate("latestMessage")
+//     .sort({updatedAt:-1})
+    // .then(async (result)=>{
+    //   result = await User.populate(result, {
+    //     path: "latestMessage.sender",
+    //     select:"firstName LastName email"
+    
+    //   });
+      // console.log(data);
+      resp.status(200).send({
+        success:true,
+        message:"got group succssfully",
+        data,
+      });
+    // })
+} catch (error) {
+  resp.status(500).send({
+    success:false,
+    message:error.message
   })
-  console.log(data);
-  resp.send(data);
-}catch(error){
-console.log(error)
-resp.status(501).send({
-  success:false,
-  message:error.message
-})
 }
 }
 
