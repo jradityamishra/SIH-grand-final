@@ -14,6 +14,12 @@ import Analysis from "./pages/Analysis";
 import Profile from "./pages/teacher/Profile";
 import EditorPage from "./pages/teacher/EditorPage";
 import ClassDetail from "./pages/teacher/ClassDetail";
+import GenerateNotes from "./pages/teacher/GenerateNotes";
+import StDashboard from "./pages/student/StDashboard";
+import StCourse from "./pages/student/StCourse";
+import StMentorship from "./pages/student/StMentorship";
+import StAnalysis from "./pages/student/StAnalysis";
+
 const App = () => {
   return (
     <div>
@@ -37,6 +43,13 @@ const App = () => {
 
         <Route path="/teacher/editor" element={<EditorPage />} />
         <Route path="/teacher/analysis" element={<Analysis />} />
+        <Route path="/teacher/generate" element={<GenerateNotes />} />
+
+        {/* student protected routes */}
+        <Route path="/student/dashboard" element={<StDashboard />} />
+        <Route path="/student/courses" element={<StCourse />} />
+        <Route path="/student/analysis" element={<StAnalysis />} />
+        <Route path="/student/mentorship" element={<StMentorship />} />
       </Routes>
       {/* <ToastContainer /> */}
     </div>

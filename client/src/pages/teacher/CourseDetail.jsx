@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Card, CardContent, Typography } from "@mui/material";
 import Layout from "../../components/layout/Layout";
-
 const CourseDetail = () => {
   const { id } = useParams();
   // useEffect(() => {
@@ -46,15 +45,10 @@ const CourseDetail = () => {
           </div>
         </Card>
         <div className="flex justify-center mx-auto my-8">
-          <iframe
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/erEgovG9WBs?si=yizHkLmT5545s055"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
+          <video
+            src="https://d3mno2xesitl2o.cloudfront.net/demo.mp4"
+            controls={true}
+          ></video>
         </div>
         <div>
           <Typography variant="subtitle1" paragraph>

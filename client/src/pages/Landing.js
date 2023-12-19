@@ -8,6 +8,9 @@ const Landing = () => {
         <Link to="/teacher/dashboard">
           <Button>Teacher Dashboard</Button>
         </Link>
+        <Link to="/student/dashboard">
+          <Button>Student Dashboard</Button>
+        </Link>
       </div>
     </>
   );
