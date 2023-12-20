@@ -12,6 +12,7 @@ const router = Router();
 
 router.post("/register", registerController);
 router.post("/login", loginController);
-router.get("/getuser", requireSignIn, getUser);
+router.get("/getuser", getUser);
+router.get("/:teacherId",  getUser);
 
 export default router;

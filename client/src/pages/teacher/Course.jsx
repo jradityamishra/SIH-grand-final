@@ -8,12 +8,17 @@ import Layout from "../../components/layout/Layout";
 import { Link } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import axios from "axios";
+import { useSelector } from 'react-redux';
 
 const Course = () => {
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState([]);
-
+  const {user}=useSelector(
+    (state) => state.auth
+  )
   useEffect(() => {
+    
+
     const fetchCourses = async () => {
       try {
         const response = await axios.get(
@@ -36,9 +41,9 @@ const Course = () => {
         <h2 className="text-3xl  font-semibold mb-8">My Courses</h2>
         <div>
           <Link to="/teacher/createcourse">
-            <Button variant="contained" color="primary">
+           {user.user.role==='teacher'? <Button variant="contained" color="primary">
               create
-            </Button>
+            </Button>:''}
           </Link>
         </div>
       </div>

@@ -10,14 +10,14 @@ const router = Router();
 
 
 //-------------- ROUTING-----------
- router.post('/',requireSignIn,accessChatController)
+ router.post('/',accessChatController)
 // router.get('/',requireSignIn,fetchChatController)
- router.post('/group',requireSignIn,creatGroupChatController)
- router.get('/getGroup/:id',requireSignIn,getGroupChatController)
+ router.post('/group',creatGroupChatController)
+ router.get('/getGroup/:id',getGroupChatController)
  router.delete('/delete/:id',deleteGroupChatController)
- router.put('/rename',requireSignIn,renameGroupChatController)
- router.put('/groupremove',requireSignIn,removeToGroupController)
- router.put('/groupadd',requireSignIn,addToGroupController)
+ router.put('/rename',renameGroupChatController)
+ router.put('/groupremove',removeToGroupController)
+ router.put('/groupadd',addToGroupController)
 
 
 

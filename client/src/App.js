@@ -26,7 +26,12 @@ import StMentorship from "./pages/student/StMentorship";
 import StAnalysis from "./pages/student/StAnalysis";
 import OnlineClass from "./pages/teacher/OnlineClass.jsx";
 import QuizPage from "./pages/teacher/QuizPage";
+import StudentProfile from './pages/StudentProfile.jsx'
+import TeacherProfile from './pages/TeacherProfile.js'
+
 const App = () => {
+  
+   
   return (
     <div>
       <Routes>
@@ -38,7 +43,8 @@ const App = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/onlineclass" element={<OnlineClass />} />
 
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/studentprofile" element={<StudentProfile />} />
+        <Route path="/teacherprofile" element={<TeacherProfile />} />
 
         {/* teacher protected routes */}
         <Route path="/teacher/dashboard" element={<Dashboard />} />

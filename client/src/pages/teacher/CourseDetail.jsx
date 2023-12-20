@@ -19,12 +19,12 @@ const LectureDetail = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/lectureUpload/getlecturedetails/${id}`
+          `/api/v1/lectureUpload/getlecturedetails/${id}`
         );
         setLectureData(response.data.lecture);
         setLoading(false);
         // const response1 = await axios.get(
-        //   `http://localhost:8000/api/v1/video/quiz/${id}`
+        //   `/api/v1/video/quiz/${id}`
         // );
         const response1 = {
           data: {
@@ -92,15 +92,15 @@ const LectureDetail = () => {
         };
 
         // if (response1.status === 200 && quizData === "") {
-        setQuizData(response1.data);
-        console.log("Quiz generation successful", response1.data);
-        console.log("MCQ answers:");
-        console.log(response1.data.answers);
-        response1.data.MCQs.forEach((question) => {
-          console.log(question.question);
-          console.log(question.options);
-        });
-        //}
+          setQuizData(response1.data);
+          console.log("Quiz generation successful", response1.data);
+          console.log("MCQ answers:");
+          console.log(response1.data.answers);
+          response1.data.MCQs.forEach((question) => {
+            console.log(question.question);
+            console.log(question.options);
+          });
+        // }
       } catch (error) {
         console.error("Error fetching lecture details:", error);
         setLoading(false);
@@ -148,18 +148,18 @@ const LectureDetail = () => {
                     {lectureData.creator.yearsOfExperience} years
                   </Typography>
                   <Typography variant="subtitle1" paragraph>
-                    Subjects Taught: {lectureData.creator.subjects.join(", ")}
+                    Subject Taught: {lectureData.creator.subjectsTaught[0]}
                   </Typography>
                   <Typography variant="subtitle1" paragraph>
                     <a
                       href={`${lectureData.pdfLink.replace(
                         "/upload/",
-                        `/upload/fl_attachment:${lectureData.title}`
+                        `/upload/fl_attachment:notes`
                       )}`}
                       className="font-bold p-2 shadow-md rounded-md"
                       target="_blank"
                       rel="noopener noreferrer"
-                      download={`${lectureData.title}.pdf`}
+                      download={`notes.pdf`}
                     >
                       <DownloadIcon className="mr-2 " />
                       Download PDF

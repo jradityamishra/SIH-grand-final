@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../components/Spinner";
-import toast from "react-hot-toast";
 import { register, reset } from "../../redux/authSlice";
 import Layout from "../../components/layout/Layout";
 import photo from "../../assets/Home.png";
-
+import {toast} from 'react-toastify'
 const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

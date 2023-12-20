@@ -101,6 +101,7 @@ export const registerController = async (req, resp, next) => {
 //-------------- LOGIN USER-----------
 
 export const loginController = async (req, resp) => {
+  console.log(req.body);
   try {
     const { email, password } = req.body;
     //validation
@@ -163,3 +164,25 @@ export const getUser = async (req, resp) => {
 
   resp.send(users);
 };
+
+
+export const ratingController=async(req,resp)=>{
+    const {rating}=req.body;
+  try{
+    const data=await Teacher.findByIdAndUpdate(req.params.teacherId,
+      {feedback:rating})
+
+      if(data){
+        resp.status(200).send({
+          success:true,
+          message:false,
+          data
+        })
+      }
+  }catch(error){
+      resp.status(500).send({
+        success:false,
+        message:error.message
+      })
+  }
+}

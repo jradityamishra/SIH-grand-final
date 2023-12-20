@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Badge from "@mui/material/Badge";
@@ -11,12 +11,13 @@ import MuiDrawer from "@mui/material/Drawer";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
+import { useSelector } from 'react-redux';
 import {
   mainListItems,
   secondaryListItems,
   studentListItems,
 } from "./ListItems";
-import { Link } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -66,10 +67,16 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const Header = () => {
+  const [data,setData]=useState();
+  const {user}=useSelector(
+    (state) => state.auth
+  )
+  console.log(user.user.role)
+  const navigate=useNavigate();
   const [open, setOpen] = React.useState(true);
   const teacher = false;
   const toggleDrawer = () => {
-    setOpen(!open);
+   setOpen(false)
   };
   return (
     <div>
@@ -101,11 +108,15 @@ const Header = () => {
             Siksha Sahyog
           </Typography>
           <IconButton color="inherit">
-            <Link to="/profile">
+           {user.user.role==='teacher'?( <Link to="/teacherprofile">
               <Badge badgeContent={4} color="secondary">
                 <AccountCircleIcon fontSize="large" />
               </Badge>{" "}
-            </Link>
+            </Link>):( <Link to="/studentprofile">
+              <Badge badgeContent={4} color="secondary">
+                <AccountCircleIcon fontSize="large" />
+              </Badge>{" "}
+            </Link>)}
           </IconButton>
         </Toolbar>
       </AppBar>

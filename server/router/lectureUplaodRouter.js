@@ -18,16 +18,15 @@ const router = express.Router();
 
 router.post(
   "/",
-  verifyIfLoggedIn,
-  verifyIfTeacher,
+  
   uploadVideo.single("lectureUrl"),
   lectureUploadController
 );
-router.post("/credits/:courseID", verifyIfLoggedIn, increaseCredits);
-router.get("/getlecture", verifyIfLoggedIn, lectureGetController);
+router.post("/credits/:courseID",  increaseCredits);
+router.get("/getlecture",  lectureGetController);
 router.get(
   "/getlecturedetails/:id",
-  verifyIfLoggedIn,
+  
   getLectureByIdController
 );
 

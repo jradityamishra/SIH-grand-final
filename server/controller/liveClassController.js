@@ -1,12 +1,10 @@
 
-
+// import {liveclass} from '../models/liveClassModel.js'
 import liveclass from '../models/liveClassModel.js'
 
 
 export const liveClassController=async(req,resp)=>{
     const {subject,Time,description,joiningLink}=req.body;
-    console.log(req.body)
-    console.log(req.params.teacherId)
     //by doing this i get only date not time
     const formattedDate=  new Date().toISOString().split('T')[0]
    try{
@@ -61,4 +59,29 @@ export const getliveClassController=async(req,resp)=>{
             message:error.message
         })
     }
+}
+
+
+
+
+export const ratingController=async(req,resp)=>{
+    const {rating}=req.body;
+    console.log(rating)
+  try{
+    const data=await liveclass.findByIdAndUpdate(req.params.teacherId,
+      {feedback:rating})
+
+      if(data){
+        resp.status(200).send({
+          success:true,
+          message:false,
+          data
+        })
+      }
+  }catch(error){
+      resp.status(500).send({
+        success:false,
+        message:error.message
+      })
+  }
 }

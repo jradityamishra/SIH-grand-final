@@ -169,6 +169,7 @@ const SidePanel = () => {
   // -------------------FETCH------------------
   
       const fetchData = async () => {
+     
         if(!userStudent){
           console.log("not get user");
         }
@@ -206,14 +207,14 @@ const SidePanel = () => {
        <div className="w-1/4 bg-gray-200 p-4">
       
         <h2 className="text-2xl font-semibold mb-4">Groups</h2>
-       {  id===userStudent._id  ?   
+       {/* {  id===userStudent._id  ?    */}
       <button
           className="w-full py-2 mb-4 bg-green-500 text-white rounded-full hover:bg-green-600"
           onClick={handleCreateGroup}
         >
           + Create Group
         </button>
-         :''} 
+         {/* :''}  */}
         <ul>
           {groups.map((g, index) => (
             <li

@@ -100,11 +100,5 @@ const studentSchema = new mongoose.Schema(
 );
 
 const Student = User.discriminator("Student", studentSchema);
-User.collection.getIndexes({}, (err, indexes) => {
-  if (err) {
-    console.error("Error retrieving indexes:", err);
-  } else {
-    console.log("Indexes:", indexes);
-  }
-});
+
 export { User, Teacher, Student };

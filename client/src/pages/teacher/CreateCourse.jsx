@@ -4,8 +4,13 @@ import { Button, TextField, Input, FormControl, Alert } from "@mui/material";
 import Layout from "../../components/layout/Layout";
 import Spinner from "../../components/Spinner";
 import EditorPage from "./EditorPage";
+import { useSelector } from 'react-redux';
 
 const CreateCourse = () => {
+  const {user}=useSelector(
+    (state) => state.auth
+  )
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [video, setVideo] = useState(null);
@@ -24,12 +29,12 @@ const CreateCourse = () => {
       formData.append("lectureUrl", video);
 
       const uploadPromise = axios.post(
-        "http://localhost:8000/api/v1/lectureUpload",
+        "/api/v1/lectureUpload",
         formData
       );
 
       const transcriptPromise = axios.post(
-        "http://localhost:8000/api/v1/video/transcript",
+        "/api/v1/video/transcript1", //change transcript
         { description: description }
       );
 
@@ -55,7 +60,8 @@ const CreateCourse = () => {
   };
 
   return (
-    <Layout>
+   <>
+   <Layout>
       <div>
         {loading ? (
           <Spinner />
@@ -100,7 +106,7 @@ const CreateCourse = () => {
                 onChange={(e) => setLink(e.target.value)}
               /> */}
 
-              <Button
+ <Button
                 variant="contained"
                 style={{ marginTop: "8px" }}
                 onClick={handleUpload}
@@ -119,6 +125,7 @@ const CreateCourse = () => {
         )}
       </div>
     </Layout>
+   </>
   );
 };
 

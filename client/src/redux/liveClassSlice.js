@@ -3,7 +3,7 @@ import axios from "axios";
 
 const liveClass = JSON.parse(sessionStorage.getItem("liveClass"));
 const initialState = {
-    liveClass: liveClass ?liveClass : null,
+    liveClass: liveClass ? liveClass : null,
     isError: false,
     isLoading: false,
     isSuccess: false,
