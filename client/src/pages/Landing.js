@@ -3,7 +3,6 @@ import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Spinner from "../components/Spinner";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -20,19 +19,15 @@ const Landing = () => {
 
   return (
     <>
-      {
-        !user?<Spinner/>:(
-          <div>
-      { user.user.role=='teacher'? <Link to="/teacher/dashboard">
+                <div>
+      <Link to="/teacher/dashboard">
           <Button>Teacher Dashboard</Button>
-        </Link>:
+        </Link>
         <Link to="/student/dashboard">
           <Button>Student Dashboard</Button>
-                     </Link>}
+                     </Link>
       </div>
-        )
-      }
-    </>
+            </>
   );
 };
 

@@ -1,6 +1,6 @@
 import {Router} from "express";
 
-import {requireSignIn} from '../middleware/authMiddleware.js'
+
 import {getGroupChatController,
     removeToGroupController,
     deleteGroupChatController,

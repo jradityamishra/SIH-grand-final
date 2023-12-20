@@ -2,13 +2,7 @@ import React from 'react';
 import Layout from '../components/layout/Layout';
 import { useSelector } from 'react-redux';
 const ProfileStudent = () => {
-  // -------------------USER OF THE SYSTEM------------------
-
-  const {user}=useSelector(
-    (state) => state.auth
-  )
-    const userStudent=user.user;
-    
+  
   return (
     
    <Layout>
@@ -23,7 +17,7 @@ const ProfileStudent = () => {
                 </div>
             </div>
             <div class="px-6 mt-16">
-                <h1 class="font-bold text-3xl text-center mb-1">{user.user.name}</h1>
+                <h1 class="font-bold text-3xl text-center mb-1">Jyotikumari</h1>
                 <p class="text-gray-800 text-large font-bold text-center">Student</p>
       <div className="px-4 py-5 sm:px-6">
        
@@ -41,7 +35,7 @@ const ProfileStudent = () => {
                 Full name
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-               {user.user.name}
+                John Doe
               </dd>
             </div>
             <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

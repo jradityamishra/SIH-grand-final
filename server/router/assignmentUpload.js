@@ -17,15 +17,11 @@ const router = express.Router();
 
 router.post(
   "/",
-  verifyIfLoggedIn,
-  verifyIfStudent,
-  uploadAssignment.single("assignmentPdf"),
+  uploadAssignment.single("descriptionFile"),
   assignmentUploadController
 );
 router.get(
   "/assignmentGet",
-  verifyIfLoggedIn,
-  verifyIfStudent,
   assignmentGetController
 );
 

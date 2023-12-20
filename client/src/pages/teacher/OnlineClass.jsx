@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from "react-redux";
 import { postLiveclassData, getLiveClassData } from '../../redux/liveClassSlice'
 import { toast } from 'react-toastify';
+import Layout from '../../components/layout/Layout';
 const OnlineClass = () => {
   const dispatch = useDispatch();
   const { user } = useSelector(
@@ -114,7 +115,8 @@ console.log(value);
   }, [])
 
   return (
-    <div className="ml-56">
+    <Layout><div className="ml-56">
+      
       <div className="min-h-screen bg-gray-100 flex flex-col">
         <div className="bg-blue-500 text-white py-4 text-center">
           <h1 className="text-4xl font-bold">Live Classes</h1>
@@ -141,8 +143,7 @@ console.log(value);
           <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
             <h2 className="text-lg font-semibold mb-2">Subject</h2>
             <p className="text-gray-700">{saveLink.subject}</p>
-            <h2 className="text-lg font-semibold mb-2">Subject</h2>
-            <p className="text-gray-700">{saveLink.subject}</p>
+           
           </div>
 
           <div className="mb-6">
@@ -162,8 +163,7 @@ console.log(value);
           <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
             <h2 className="text-lg font-semibold mb-2">Today's Lecture Time</h2>
             <p className="text-gray-700">{saveLink.Timing}</p>
-            <h2 className="text-lg font-semibold mb-2">Today's Lecture Time</h2>
-            <p className="text-gray-700">{saveLink.Timing}</p>
+           
           </div>
 
           <div className="mb-6">
@@ -259,7 +259,7 @@ console.log(value);
 
 
 
-    </div>
+    </div></Layout>
   );
 };
 

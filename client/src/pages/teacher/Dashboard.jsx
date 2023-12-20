@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect,useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -9,20 +10,17 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import Chart from "../../components/Chart";
-import Deposits from "../../components/Deposits";
-import Orders from "../../components/Orders";
+import Percentage from "../../components/Percentage";
+import Recommend from "../../components/Recommend";
 import Layout from "../../components/layout/Layout";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector,useDispatch } from 'react-redux'
 
+import {login,logout,reset } from "../../redux/authSlice"
+import Spinner from "../../components/Spinner";
+// import { useSelector } from "react-redux";
 function Copyright(props) {
-  const { user } = useSelector(
-    (state) => state.auth
-  );
   
-  
-
-
   return (
     <Typography
       variant="body2"
@@ -44,6 +42,33 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
+  const [loading, setLoading] = useState(false);
+  const [teacherGraph, setTeacherGraph] = React.useState({});
+  const { user } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+
+  const teacherGrowth = async () => {
+    try {      setLoading(true);
+
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/analysis/${user.user._id}`
+      );
+      setTeacherGraph(response.data.analysis);
+      console.log(response.data.analysis);
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching courses:", error);
+      setLoading(false);
+    }
+  };
+
+  teacherGrowth();
+}, []);
+
   return (
     <Layout>
       <ThemeProvider theme={defaultTheme}>
@@ -70,7 +95,7 @@ export default function Dashboard() {
                       height: 240,
                     }}
                   >
-                    <Chart />
+                    <Chart teacherGrowth={teacherGraph} />
                   </Paper>
                 </Grid>
                 {/* Recent Deposits */}
@@ -83,7 +108,7 @@ export default function Dashboard() {
                       height: 240,
                     }}
                   >
-                    <Deposits  />
+                    <Percentage teacherGrowth={teacherGraph} />
                   </Paper>
                 </Grid>
                 {/* Recent Orders */}
@@ -91,7 +116,7 @@ export default function Dashboard() {
                   <Paper
                     sx={{ p: 2, display: "flex", flexDirection: "column" }}
                   >
-                    {/* <Orders /> */}
+                    <Recommend />
                   </Paper>
                 </Grid>
               </Grid>

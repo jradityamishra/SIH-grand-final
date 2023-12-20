@@ -2,9 +2,10 @@ import { postObject } from "../helper/s3/S3lectureUpload.js";
 import assignmentModel from "../models/assignmentModel.js";
 
 export const assignmentUploadController = async (req, resp) => {
-  const file = req.file;
-  console.log(file);
-  const pdfName = req.file.originalname;
+  const file = req.body;
+  console.log(file.descriptionFile);
+  console.log(req.data)
+  // const pdfName = req.file.originalname;
 
   try {
     const get = await postObject(pdfName, file);
@@ -31,6 +32,8 @@ export const assignmentUploadController = async (req, resp) => {
 };
 
 export const assignmentGetController = async (req, resp) => {
+  console.log(req.body)
+  console.log(req.body.file);
   try {
     const data = await assignmentModel.find({});
     console.log(data);

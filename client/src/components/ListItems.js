@@ -12,6 +12,8 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import { Link } from "react-router-dom";
 import { Divider } from "@mui/material";
 import GrainIcon from "@mui/icons-material/Grain";
+import LiveTvIcon from "@mui/icons-material/LiveTv";
+
 export const mainListItems = (
   <React.Fragment>
     <Link to="/teacher/dashboard">
@@ -49,9 +51,10 @@ export const mainListItems = (
     <Link to="/chat">
       <ListItemButton>
         <ListItemIcon>
-          <LayersIcon />
+          {" "}
+          <AssignmentIcon />
         </ListItemIcon>
-        <ListItemText primary="Mentorship" />
+        <ListItemText primary="Community" />
       </ListItemButton>
     </Link>
   </React.Fragment>
@@ -155,20 +158,24 @@ const teacher = {
 
 export const secondaryListItems = (
   <React.Fragment>
-    <ListSubheader component="div" inset>
-      My Classes
-    </ListSubheader>
-
-    {teacher.classes.map((item) => (
-      <Link to={`/teacher/class/${item.id}`}>
-        <ListItemButton key={item.id}>
-          <ListItemIcon>
-            <AssignmentIcon />
-          </ListItemIcon>
-          <ListItemText primary={item.name} />
-        </ListItemButton>
-      </Link>
-    ))}
+    {/* {teacher.classes.map((item) => ( */}
+    <Link to="/teacher/mentorship">
+      <ListItemButton>
+        <ListItemIcon>
+          <LayersIcon />
+        </ListItemIcon>
+        <ListItemText primary="Headlines" />
+      </ListItemButton>
+    </Link>
+    <Link to="/onlineclass">
+      <ListItemButton>
+        <ListItemIcon>
+          <LiveTvIcon />
+        </ListItemIcon>
+        <ListItemText primary="Live class" />
+      </ListItemButton>
+    </Link>
+    {/* ))} */}
     <Divider />
     <Link to="/teacher/generate">
       <ListItemButton>

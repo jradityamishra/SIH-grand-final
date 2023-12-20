@@ -47,7 +47,7 @@ const initialState = {
   });
   export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/auth/login", user);
+      const response = await axios.post("/api/v1/auth/login", user);
       console.log(response)
       if (response.status === 201) {
         const userData = {

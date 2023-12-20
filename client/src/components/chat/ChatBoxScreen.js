@@ -105,7 +105,7 @@ const ChatBoxScreen = () => {
                   message.sender._id === myuser._id  ? 'bg-blue-500 text-white' : 'bg-gray-300'
                 }`}
               >
-                <span className='inline-block'>{message.sender.name}</span>
+                <span className='inline-block'>{message.sender.name}--</span>
                 {message.content}
               </span>
             </div>

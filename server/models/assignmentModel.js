@@ -2,16 +2,20 @@ import mongoose from "mongoose";
 
 const assinmentModel = new mongoose.Schema(
   {
-    studentName: {
+    title: {
       type: String,
       required: true,
     },
-    assignmentPdf: {
+    descriptionFile: {
       type: String,
-      required: true,
+      // required: true,
     },
-    deadline: {
+    deadlineDays: {
       type: Date,
+    },
+    description:{
+      type:String,
+      required:true
     },
     assignmentCredits: [
       {

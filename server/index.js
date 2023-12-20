@@ -8,6 +8,7 @@ import colors from "colors";
 import connection from "./database/db.js";
 import apiRoute from "./router/apiRoute.js";
 import path, { dirname } from "path";
+import chat from './router/chatRoutes.js'
 //configure env
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -27,7 +28,7 @@ app.use(express.static(path.join(__dirname, "./public")));
 
 //ROUTE
 app.use("/api/v1", apiRoute);
-
+app.use('/api/v1/chat',chat)
 // DATABASE CONNECTION
 connection();
 

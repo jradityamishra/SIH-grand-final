@@ -3,6 +3,7 @@ import {toast }from 'react-toastify'
 import { ChatState } from '../../context/ChatProvider';
 import { useSelector } from 'react-redux';
 import axios from 'axios'
+
 // import ChatLogic from '../../config/ChatLogic'
 
 const SidePanel = () => {
@@ -29,7 +30,7 @@ const SidePanel = () => {
        const [chat, setChat] = useState([]);
        const [isComponentOpen, setIsComponentOpen] = useState(false);
        const [selectedGroupId, setSelectedGroupId] = useState(null);
-     
+          const[rr,setRr]=useState([]);
 
 
       
@@ -172,31 +173,42 @@ const SidePanel = () => {
         if(!userStudent){
           console.log("not get user");
         }
-        try {
+     if(userStudent){
+         try {
           const response = await axios.get(`/api/v1/chat/getGroup/${userStudent._id}`);
           console.log("response", response.data.data);
+         if(response && response.data && response.data.data){
+          setRr(response.data.data);
           response.data.data.map((g)=>{
-            setId(g.groupAdmin._id)
-            setGroupId(g._id)
-            console.log("data:",g.groupAdmin._id);
-            console.log("myid:",g._id);
+            console.log(g.chatName)
+            setId(g._id)
+           setRr((p)=>[...p,p]);
+            
           })
-         
+        //  }
+        // setRr((prevRr) => [...prevRr, ...response.data.data.map((g) => g.chatName)]);
+      
+  
+         }
       setGroups(response.data.data);
-     
+      // console.log(rr)
         } catch (error) {
           console.error(error);
-          toast('Failed to load groups', {
-            position: 'top-right',
-            status: 'warning',
-            autoClose: 5000,
-            theme: 'light',
-          });
+          // toast('Failed to load groups', {
+          //   position: 'top-right',
+          //   status: 'warning',
+          //   autoClose: 5000,
+          //   theme: 'light',
+          // });
         }
+     }
       };
       useEffect(() => {
         fetchData();
        // Call the async function
+       if(rr.length>0){
+        console.log("rr:",rr)
+       }
       }, [userStudent._id]);
      
   return (
@@ -206,20 +218,22 @@ const SidePanel = () => {
        <div className="w-1/4 bg-gray-200 p-4">
       
         <h2 className="text-2xl font-semibold mb-4">Groups</h2>
-       {  id===userStudent._id  ?   
+       {/* {  id===userStudent._id  ?    */}
       <button
           className="w-full py-2 mb-4 bg-green-500 text-white rounded-full hover:bg-green-600"
           onClick={handleCreateGroup}
         >
           + Create Group
         </button>
-         :''} 
+         {/* :''}  */}
         <ul>
-          {groups.map((g, index) => (
+          {rr && rr.map((g) => (
+           
             <li
               key={g._id}
               className="mb-2 flex items-center justify-between cursor-pointer hover:bg-gray-300 p-2 rounded-md"
             >
+            
                {/* onClick={() => handleSpanClick(group._id)} */}
                <span onClick={() => handleSpanClick(g._id)}>{g.chatName}</span>
              { id===userStudent._id  ? <button

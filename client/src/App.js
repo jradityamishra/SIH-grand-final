@@ -28,13 +28,16 @@ import OnlineClass from "./pages/teacher/OnlineClass.jsx";
 import QuizPage from "./pages/teacher/QuizPage";
 import StudentProfile from './pages/StudentProfile.jsx'
 import TeacherProfile from './pages/TeacherProfile.js'
-
+import Assignment from './pages/Assignment.jsx'
+import Forum from "./pages/teacher/Forum.jsx";
+import PublicProfile from "./pages/PublicProfile.jsx";
 const App = () => {
   
    
   return (
     <div>
       <Routes>
+       <Route path="/assignment" element={<Assignment />}/>
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/chat" element={<Chat />} />
@@ -52,8 +55,10 @@ const App = () => {
         <Route
           path="/teacher/collaborations/detail/:id"
           element={<CollabDetail />}
-        />
-        <Route path="/teacher/mentorship" element={<Mentorship />} />
+        />        
+        <Route path="/teacher/public-profile" element={<PublicProfile/>} />
+
+        <Route path="/teacher/mentorship" element={<Forum/>} />
         <Route path="/teacher/courses" element={<Course />} />
         <Route path="/teacher/courses/:id" element={<CourseDetail />} />
         <Route path="/teacher/createcourse" element={<CreateCourse />} />
