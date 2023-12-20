@@ -46,12 +46,13 @@ export const mainListItems = (
         <ListItemText primary="Analysis" />
       </ListItemButton>
     </Link>
-    <Link to="/teacher/mentorship">
+    <Link to="/teacher/chat">
       <ListItemButton>
         <ListItemIcon>
-          <LayersIcon />
+          {" "}
+          <AssignmentIcon />
         </ListItemIcon>
-        <ListItemText primary="Mentorship" />
+        <ListItemText primary="Community" />
       </ListItemButton>
     </Link>
   </React.Fragment>
@@ -159,16 +160,16 @@ export const secondaryListItems = (
       My Classes
     </ListSubheader>
 
-    {teacher.classes.map((item) => (
-      <Link to={`/teacher/class/${item.id}`}>
-        <ListItemButton key={item.id}>
-          <ListItemIcon>
-            <AssignmentIcon />
-          </ListItemIcon>
-          <ListItemText primary={item.name} />
-        </ListItemButton>
-      </Link>
-    ))}
+    {/* {teacher.classes.map((item) => ( */}
+    <Link to="/teacher/mentorship">
+      <ListItemButton>
+        <ListItemIcon>
+          <LayersIcon />
+        </ListItemIcon>
+        <ListItemText primary="In news" />
+      </ListItemButton>
+    </Link>
+    {/* ))} */}
     <Divider />
     <Link to="/teacher/generate">
       <ListItemButton>

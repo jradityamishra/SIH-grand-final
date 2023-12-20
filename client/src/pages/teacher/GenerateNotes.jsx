@@ -10,42 +10,38 @@ const GenerateNotes = () => {
   const [responseText, setResponseText] = useState("");
 
   const handleSendMessage = async () => {
-    // if (newMessage.trim() !== "") {
-    //   const url = "https://chatgpt-42.p.rapidapi.com/gpt4";
-    //   const options = {
-    //     method: "POST",
-    //     headers: {
-    //       "content-type": "application/json",
-    //       "X-RapidAPI-Key":
-    //         "2b85d90714msh1d7ece47b8e8220p1c55a4jsnb14b38250f0a",
-    //       "X-RapidAPI-Host": "chatgpt-42.p.rapidapi.com",
-    //     },
-    //     body: JSON.stringify({
-    //       messages: [
-    //         {
-    //           role: "user",
-    //           content: newMessage,
-    //         },
-    //       ],
-    //       tone: "Balanced",
-    //     }),
-    //   };
-    //   try {
-    //     const response = await fetch(url, options);
-    //     const data = await response.json();
-    //     setResponseText(data.result);
-    //     console.log(data);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    //   // Add user message
-    //   const userMessage = { text: newMessage, isUser: true };
-    //   // Add response message (dummy text for now)
-    //   const responseMessage = { text: responseText, isUser: false };
-    //   // Alternate between user and response messages
-    //   setMessages([...messages, userMessage, responseMessage]);
-    //   setNewMessage("");
-    // }
+    if (newMessage.trim() !== "") {
+      const url = "https://chatgpt-gpt4-ai-chatbot.p.rapidapi.com/ask";
+      const options = {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "X-RapidAPI-Key":
+            "2b85d90714msh1d7ece47b8e8220p1c55a4jsnb14b38250f0a",
+          "X-RapidAPI-Host": "chatgpt-gpt4-ai-chatbot.p.rapidapi.com",
+        },
+        body: JSON.stringify({
+          query: `${newMessage}+ in a detailed way in text format`,
+        }),
+      };
+
+      try {
+        const res = await fetch(url, options);
+        const result = await res.json();
+        console.log(result.response);
+        setResponseText(result.response);
+      } catch (error) {
+        console.error(error);
+      }
+      // Add user message
+      const userMessage = { text: newMessage, isUser: true };
+      // Add response message (dummy text for now)
+      const responseMessage = { text: responseText, isUser: false };
+      // Alternate between user and response messages
+      setMessages([...messages, userMessage, responseMessage]);
+      setNewMessage("");
+      setResponseText("");
+    }
   };
 
   return (

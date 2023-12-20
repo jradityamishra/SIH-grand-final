@@ -15,24 +15,20 @@ function createData(time, amount) {
   return { time, amount };
 }
 
-const data = [
-  createData("Jan", 0),
-  createData("Feb", 300),
-  createData("Mar", 600),
-  createData("Jun", 800),
-  createData("Jul", 1500),
-  createData("Aug", 2000),
-  createData("Sep", 2400),
-  createData("Oct", 2400),
-  createData("Nov", undefined),
-];
-
-export default function Chart() {
+export default function Chart({ teacherGrowth }) {
   const theme = useTheme();
+  const calculateTotal = (month) => {
+    const values = Object.values(teacherGrowth[month]);
+    return values.reduce((total, value) => total + value, 0);
+  };
+
+  const data = Object.keys(teacherGrowth).map((month) =>
+    createData(month, calculateTotal(month))
+  );
 
   return (
     <React.Fragment>
-      <Title>Content Engagement</Title>
+      <Title>Growth Analysis</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}
@@ -61,7 +57,7 @@ export default function Chart() {
                 ...theme.typography.body1,
               }}
             >
-              Views (k)
+              Performance
             </Label>
           </YAxis>
           <Line

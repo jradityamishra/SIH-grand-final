@@ -5,7 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/teacher/Dashboard";
 import Collab from "./pages/teacher/Collab";
-import Mentorship from "./pages/teacher/Mentorship";
+import Forum from "./pages/teacher/Forum";
 import Course from "./pages/teacher/Course";
 import CreateCourse from "./pages/teacher/CreateCourse";
 import CollabDetail from "./pages/teacher/CollabDetail";
@@ -19,6 +19,7 @@ import StDashboard from "./pages/student/StDashboard";
 import StCourse from "./pages/student/StCourse";
 import StMentorship from "./pages/student/StMentorship";
 import StAnalysis from "./pages/student/StAnalysis";
+import PublicProfile from "./pages/PublicProfile";
 
 const App = () => {
   return (
@@ -35,7 +36,7 @@ const App = () => {
           path="/teacher/collaborations/detail/:id"
           element={<CollabDetail />}
         />
-        <Route path="/teacher/mentorship" element={<Mentorship />} />
+        <Route path="/teacher/mentorship" element={<Forum />} />
         <Route path="/teacher/courses" element={<Course />} />
         <Route path="/teacher/courses/:id" element={<CourseDetail />} />
         <Route path="/teacher/createcourse" element={<CreateCourse />} />
@@ -44,6 +45,7 @@ const App = () => {
         <Route path="/teacher/editor" element={<EditorPage />} />
         <Route path="/teacher/analysis" element={<Analysis />} />
         <Route path="/teacher/generate" element={<GenerateNotes />} />
+        <Route path="/teacher/public-profile" element={<PublicProfile />} />
 
         {/* student protected routes */}
         <Route path="/student/dashboard" element={<StDashboard />} />
