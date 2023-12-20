@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
+import Spinner from "../components/Spinner";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -14,19 +14,24 @@ const Landing = () => {
     // Use the useEffect hook to wait until the component is mounted
     // before redirecting to the login page if there is no user.
     if (!systemUser) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [systemUser, navigate]);
 
   return (
     <>
-      {systemUser ? (
-        <div>
-          <Link to="/teacher/dashboard">
-            <Button>Teacher Dashboard</Button>
-          </Link>
-        </div>
-      ) : null}
+      {
+        !user?<Spinner/>:(
+          <div>
+      { user.user.role=='teacher'? <Link to="/teacher/dashboard">
+          <Button>Teacher Dashboard</Button>
+        </Link>:
+        <Link to="/student/dashboard">
+          <Button>Student Dashboard</Button>
+                     </Link>}
+      </div>
+        )
+      }
     </>
   );
 };

@@ -1,0 +1,4 @@
+numpy 
+tensorflow
+transformers
+h5py

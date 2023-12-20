@@ -41,7 +41,9 @@ const Login = () => {
     useEffect(() => {
         console.log(user)
     if (isError) toast.error(message);
-    if (isSuccess || user) navigate("/");
+   { if(user){
+    user.user.role=='teacher'?  navigate("/teacher/dashboard"):navigate("/student/dashboard")
+   }}
     dispatch(reset());
    }, [user, isError, message, isSuccess, dispatch, navigate]);
   

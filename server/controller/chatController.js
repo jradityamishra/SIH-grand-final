@@ -111,7 +111,7 @@ const user_id=req.params.id;
 console.log("betichod",user_id)
 
 try {
-  const data=await Chat.find({ users: { $elemMatch: { $eq: req.params.id } } })
+  const data=await Chat.find({ user: { $elemMatch: { $eq: req.params.id} } })
   .populate("users","-password")
   .populate("groupAdmin", "-password");
 //     .populate("latestMessage")

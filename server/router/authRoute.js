@@ -1,17 +1,23 @@
-import {Router} from "express";
-import {registerController,loginController,getUser,feedback} from "../controller/authController.js"
-import {requireSignIn} from '../middleware/authMiddleware.js'
+
+import { Router } from "express";
+import {
+  registerController,
+  loginController,
+  getUser,
+} from "../controller/authController.js";
+import { requireSignIn } from "../middleware/authMiddleware.js";
 //-------------- ROUTING OBJECT-----------
 const router = Router();
 
 //-------------- ROUTING-----------
 
-router.post('/register',registerController);
-router.post('/login',loginController)
-router.get('/getuser',requireSignIn,getUser);
+router.post("/register", registerController);
+router.post("/login", loginController);
+router.get("/getuser", getUser);
+router.get("/:teacherId",  getUser);
 
 //--------------FEEDBACK ROUTING-----------
-router.post('/:teacherId',feedback)
+// router.post('/:teacherId',feedback)
 
 
 

@@ -1,7 +1,6 @@
-import {User,Teacher,Student} from "../models/UserModel.js";
+import { User, Teacher, Student } from "../models/UserModel.js";
 import { hashPassword, comparePassword } from "../helper/auth/authHelper.js";
 import generateAuthToken from "../helper/auth/generateAuthToken.js";
-
 // import {Student} from "../models/UserModel.js";
 
 //-------------- REGISTER USER-----------
@@ -19,13 +18,13 @@ export const registerController = async (req, resp, next) => {
       levelOfEducation,
       about,
       studentClass,
+      teacherClass,
       coursesTaught,
       board,
-      school
+      school,
     } = req.body;
-  
 
-    if (!name || !email || !password || !role|| !school) {
+    if (!name || !email || !password || !role || !school) {
       return resp.status(400).send({ message: "All fields are required" });
     }
 
@@ -49,7 +48,7 @@ export const registerController = async (req, resp, next) => {
 
     let user;
 
-    if (role === "Teacher") {
+    if (role === "teacher") {
       user = await new Teacher({
         name,
         email,
@@ -57,11 +56,12 @@ export const registerController = async (req, resp, next) => {
         dob,
         role,
         yearsOfExperience,
-        subjectsTaught:subject,
+        subjectsTaught: subject,
         levelOfEducation,
+        teacherClass,
         coursesTaught,
         about,
-        school
+        school,
       }).save();
     } else if (role === "student") {
       user = await new Student({
@@ -72,14 +72,14 @@ export const registerController = async (req, resp, next) => {
         dob,
         studentClass,
         board,
-        school
+        school,
       }).save();
     }
-    
+    console.log(user);
     resp
       .cookie(
         "access_token",
-        generateAuthToken(user._id, user.name, user.email),
+        generateAuthToken(user._id, user.name, user.email, user.role),
         {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
@@ -100,8 +100,8 @@ export const registerController = async (req, resp, next) => {
 
 //-------------- LOGIN USER-----------
 
-
 export const loginController = async (req, resp) => {
+  console.log(req.body);
   try {
     const { email, password } = req.body;
     //validation
@@ -112,6 +112,7 @@ export const loginController = async (req, resp) => {
       });
     }
     //check user
+
     const user = await User.findOne({ email });
     if (!user) {
       return resp.status(404).send({
@@ -121,7 +122,7 @@ export const loginController = async (req, resp) => {
     }
     const match = await comparePassword(password, user.password);
     if (!match) {
-      return resp.status(401).send({
+      return resp.status(200).send({
         success: false,
         message: "Invalid Password!",
       });
@@ -129,7 +130,7 @@ export const loginController = async (req, resp) => {
     resp
       .cookie(
         "access_token",
-        generateAuthToken(user._id, user.name, user.email),
+        generateAuthToken(user._id, user.name, user.email, user.role),
         {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
@@ -138,62 +139,50 @@ export const loginController = async (req, resp) => {
       )
       .status(201)
       .send({
-        success:true,
-        message:"login successfully",
-        user
-
+        success: true,
+        message: "login successfully",
+        user,
       });
   } catch (error) {
     next(error);
   }
 };
 
+// /api/user?search=
 
-  // /api/user?search=
-
-  export const getUser=async(req,resp)=>{
-   
-    
-      const keyword=req.query.search
-      ? {
-        $or:[
-          {firstName:{$regex:req.query.search, $options: 'i' }
-       }, {class:{$regex:req.query.search, $options: 'i' },}
+export const getUser = async (req, res) => {
+  const {id}=req.body;
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { class: { $regex: req.query.search, $options: "i" } },
         ],
-        role: { $ne: 'teacher' }, // Exclude users with the role 'teacher'
       }
-    : { role: { $ne: 'teacher' }};
+    : {};
 
-      const users=await User.find({...keyword,  _id:{$ne:req.user._id}}) //except this user retun me all id
-
-    resp.send(users);
-  } 
-       
-
-  // SAVE THE FEEDBACK OF TEACHER
+  const users = await User.find(keyword).find({ _id: { $ne:id} });
+  res.send(users);
+};
 
 
-  export const feedback=async(req,resp)=>{
+export const ratingController=async(req,resp)=>{
     const {rating}=req.body;
-    console.log(rating);
-    try{
-      const data=await Teacher.findByIdAndUpdate(req.params.teacherId,
-        {teacherFeedback:rating});
-      console.log(data);
-      if (!data) {
-        return res.status(404).json({ message: 'Teacher not found' });
-      }
-      resp.status(200).send({
-        success:true,
-        message:"rating is done",
-        data
-      })
-  
-     
-  
-      // Save the updated teacher document
-      
-    }catch(error){
+  try{
+    const data=await Teacher.findByIdAndUpdate(req.params.teacherId,
+      {feedback:rating})
 
-    }
+      if(data){
+        resp.status(200).send({
+          success:true,
+          message:false,
+          data
+        })
+      }
+  }catch(error){
+      resp.status(500).send({
+        success:false,
+        message:error.message
+      })
   }
+}

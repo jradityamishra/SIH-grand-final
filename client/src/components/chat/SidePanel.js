@@ -13,12 +13,13 @@ const SidePanel = () => {
             (state) => state.auth
           )
             const userStudent=user.user;
-            console.log(userStudent._id);
+            console.log("id:",userStudent._id);
 
 
     
 // -------------------STATE MANAGEMENT------------------
-      const [id, setId] = useState();
+           
+const [id, setId] = useState();
       const [loading, setLoading] = useState(false);
       const [selectedUsers, setSelectedUsers] = useState([]);
       const [groups, setGroups] = useState([]);
@@ -54,7 +55,7 @@ const SidePanel = () => {
         }
         try{
             setLoading(true)
-            const {data}=await axios.get(`/api/v1/auth/getuser?search=${search}`);
+            const {data}=await axios.get(`/api/v1/auth/getuser?search=${search}`,{id:userStudent._id});
             console.log(data);
             setLoading(false);
             setSearchResult(data);
@@ -169,10 +170,11 @@ const SidePanel = () => {
   // -------------------FETCH------------------
   
       const fetchData = async () => {
-        if(!userStudent){
+             if(!userStudent){
           console.log("not get user");
         }
         try {
+          if(userStudent._id){
           const response = await axios.get(`/api/v1/chat/getGroup/${userStudent._id}`);
           console.log("response", response.data.data);
           response.data.data.map((g)=>{
@@ -183,7 +185,7 @@ const SidePanel = () => {
           })
          
       setGroups(response.data.data);
-     
+        }
         } catch (error) {
           console.error(error);
           toast('Failed to load groups', {
@@ -206,14 +208,12 @@ const SidePanel = () => {
        <div className="w-1/4 bg-gray-200 p-4">
       
         <h2 className="text-2xl font-semibold mb-4">Groups</h2>
-       {/* {  id===userStudent._id  ?    */}
-      <button
+        <button
           className="w-full py-2 mb-4 bg-green-500 text-white rounded-full hover:bg-green-600"
           onClick={handleCreateGroup}
         >
           + Create Group
         </button>
-         {/* :''}  */}
         <ul>
           {groups.map((g, index) => (
             <li
@@ -254,18 +254,18 @@ const SidePanel = () => {
             />
                     {/* selected user */}
                     {
-                      selectedUsers.map((u)=>(
-                        <span  id="badge-dismiss-dark" class="inline-flex items-center my-1 mx-1 px-2 py-1 me-2 text-sm font-medium text-gray-800 bg-gray-100 rounded dark:bg-gray-700 dark:text-gray-300">
-                        {u.name} 
-                        <button type="button" onClick={()=>handleDelete(u)} class="inline-flex items-center p-1 ms-2 text-sm text-gray-400 bg-transparent rounded-sm hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-gray-300" data-dismiss-target="#badge-dismiss-dark" aria-label="Remove">
-                        <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only" >Remove badge</span>
-                        </button>
-                        </span>
+                      // selectedUsers.map((u)=>(
+                      //   <span  id="badge-dismiss-dark" class="inline-flex items-center my-1 mx-1 px-2 py-1 me-2 text-sm font-medium text-gray-800 bg-gray-100 rounded dark:bg-gray-700 dark:text-gray-300">
+                      //   {u.name} 
+                      //   <button type="button" onClick={()=>handleDelete(u)} class="inline-flex items-center p-1 ms-2 text-sm text-gray-400 bg-transparent rounded-sm hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-gray-300" data-dismiss-target="#badge-dismiss-dark" aria-label="Remove">
+                      //   <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                      //   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                      //   </svg>
+                      //   <span class="sr-only" >Remove badge</span>
+                      //   </button>
+                      //   </span>
                        
-                      ))
+                      // ))
                     }
                     {
                         loading?(<div>Loading....</div>):(

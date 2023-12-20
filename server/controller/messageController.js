@@ -2,13 +2,19 @@ import mongoose from 'mongoose';
 import Message from '../models/messageModel.js'
 import Chat from '../models/chatModel.js';
 import {User} from '../models/UserModel.js'
+
+
 export const sendMessageController=async(req,resp)=>{
+
     const { content, chatId,user_id } = req.body;
     //const id="65780139af4dbfd592ca7048"
     
   if (!content || !chatId) {
     console.log("Invalid data passed into request");
-    return resp.sendStatus(400);
+    return resp.status(400).send({
+      sucess:false,
+      message:"tumhara data match nhi kar raha"
+    })
   }
 
   var newMessage = {

@@ -32,24 +32,24 @@ export default function Chart() {
     // createData("21:00", 2400),
     // createData("24:00", undefined),
   ];
-  const dataa=async()=>{
-    try{
-     const mldata=await axios.get(`http://127.0.0.1:8000/student/6581659e8e8a2ceef290dea1`);
-     if(mldata){
-        setStudentData(mldata.data);
-      //  setResponse(mldata.data.message)
+  // const dataa=async()=>{
+  //   try{
+  //   //  const mldata=await axios.get(`http://127.0.0.1:8000/student/6581659e8e8a2ceef290dea1`);
+  //   //  if(mldata){
+  //       // setStudentData(mldata.data);
+  //     //  setResponse(mldata.data.message)
      
-      //  console.log("data:",mldata.data.message)
-     }
-    }catch(error){
-       console.log("something is wrong");
-    }
+  //     //  console.log("data:",mldata.data.message)
+  //    }
+  //   }catch(error){
+  //      console.log("something is wrong");
+  //   }
    
-   }
+  //  }
    
    
    React.useEffect(()=>{
-    dataa()
+    // dataa()
    //console.log(studentData)
 
    },[])
@@ -57,7 +57,7 @@ export default function Chart() {
 
   return (
    <>
-   {!studentData ? <Spinner/>:
+   {studentData ? <Spinner/>:
     <React.Fragment>
     <Title>Today</Title>
     <ResponsiveContainer>

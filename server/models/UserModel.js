@@ -20,9 +20,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    school:{
-      type:String,
-      required:true
+    school: {
+      type: String,
+      required: true,
     },
     dob: {
       type: Date,
@@ -40,12 +40,13 @@ const teacherSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    subjectsTaught: 
+    subjectsTaught: [
       {
         type: String,
         required: true,
       },
-    
+    ],
+
     levelOfEducation: {
       type: String,
       required: true,
@@ -54,16 +55,16 @@ const teacherSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    teacherFeedback: {
-      type:Number,
-      default:"0"
+    teacherClass: {
+      type: Number,
+      required: true,
     },
-    coursesTaught:  [{
-        // type: mongoose.Schema.Types.ObjectId,
-        type:String,
+    coursesTaught: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Lecture",
-      }],
-    
+      },
+    ],
   },
   
   { timestamps: true }
@@ -77,8 +78,12 @@ const studentSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    assignmentCredits: {
+      type: Number,
+      default: 0,
+    },
     studentClass: {
-      type: String,
+      type: Number,
       required: true,
     },
     board: {
@@ -97,4 +102,4 @@ const studentSchema = new mongoose.Schema(
 
 const Student = User.discriminator("Student", studentSchema);
 
-export {User,Teacher,Student};
+export { User, Teacher, Student };

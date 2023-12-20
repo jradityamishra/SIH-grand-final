@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -6,90 +6,90 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Layout from "../../components/layout/Layout";
 import { Link } from "react-router-dom";
-
-const courseData = [
-  {
-    id: 1,
-    title: "Web Development",
-    duration: "50 hours",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
-    thumbnail:
-      "https://img.freepik.com/free-vector/online-tutorials-concept_52683-37480.jpg?w=1060&t=st=1702486800~exp=1702487400~hmac=2cc4ec582d4daff94f7bfe35fe3d623a5a6cafce72b0d704c6d5054ff37a1c17",
-    chapters: ["html", "css", "js", "react", "nodejs", "express", "mongodb"],
-  },
-  {
-    id: 2,
-    title: "Blockchain",
-    duration: "40 hours",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
-    thumbnail:
-      "https://img.freepik.com/free-vector/online-tutorials-concept_52683-37480.jpg?w=1060&t=st=1702486800~exp=1702487400~hmac=2cc4ec582d4daff94f7bfe35fe3d623a5a6cafce72b0d704c6d5054ff37a1c17",
-    chapters: ["html", "css", "js", "react", "nodejs", "express", "mongodb"],
-  },
-  {
-    id: 3,
-    title: "Dynamic programming",
-    duration: "10 hours",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing",
-    thumbnail:
-      "https://img.freepik.com/free-vector/online-tutorials-concept_52683-37480.jpg?w=1060&t=st=1702486800~exp=1702487400~hmac=2cc4ec582d4daff94f7bfe35fe3d623a5a6cafce72b0d704c6d5054ff37a1c17",
-    chapters: ["html", "css", "js", "react", "nodejs", "express", "mongodb"],
-  },
-];
+import Spinner from "../../components/Spinner";
+import axios from "axios";
+import { useSelector } from 'react-redux';
 
 const Course = () => {
+  const [loading, setLoading] = useState(true);
+  const [courses, setCourses] = useState([]);
+  const {user}=useSelector(
+    (state) => state.auth
+  )
+  useEffect(() => {
+    
+
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/v1/lectureUpload/getlecture/"
+        );
+        setCourses(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
   return (
     <Layout>
       <div className="flex flex-row text-center justify-evenly">
         <h2 className="text-3xl  font-semibold mb-8">My Courses</h2>
         <div>
           <Link to="/teacher/createcourse">
-            <Button variant="contained" color="primary">
+           {user.user.role==='teacher'? <Button variant="contained" color="primary">
               create
-            </Button>
+            </Button>:''}
           </Link>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-8">
-        {courseData.map((val, k) => (
-          <div id="courselist" key={k} className="mx-4">
-            <Card variant="outlined">
-              <React.Fragment>
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    {val.title}
-                  </Typography>
-                  <Typography
-                    sx={{ fontSize: 16 }}
-                    variant="body2"
-                    gutterBottom
-                  >
-                    {val.duration}
-                  </Typography>
-                  <img src={val.thumbnail} alt="" />
-                  <Typography color="text.secondary">
-                    Description : {val.description}
-                    <br />
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Link to={`/teacher/courses/${val.id}`}>
-                    <Button
-                      size="small"
-                      href={val.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="grid md:grid-cols-3 gap-8">
+          {courses.map((val, k) => (
+            <div id="courselist" key={k} className="mx-4">
+              <Card variant="outlined" style={{ height: "100%" }}>
+                <React.Fragment>
+                  <CardContent style={{ height: "100%" }}>
+                    <Typography variant="h5" component="div">
+                      {val.title}
+                    </Typography>
+                    <Typography
+                      sx={{ fontSize: 16 }}
+                      variant="body2"
+                      gutterBottom
                     >
-                      Details
-                    </Button>
-                  </Link>
-                </CardActions>
-              </React.Fragment>
-            </Card>
-          </div>
-        ))}
-      </div>
+                      Video by: {val.creator.name}
+                    </Typography>
+                    {/* Remove the img tag since there's no thumbnail */}
+                    <Typography color="text.secondary">
+                      Description: {val.description.substring(0, 50) + "...."}
+                      <br />
+                    </Typography>
+                    <CardActions>
+                      <Link to={`/teacher/courses/${val._id}`}>
+                        <Button
+                          size="small"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Details
+                        </Button>
+                      </Link>
+                    </CardActions>
+                  </CardContent>
+                </React.Fragment>
+              </Card>
+            </div>
+          ))}
+        </div>
+      )}
     </Layout>
   );
 };

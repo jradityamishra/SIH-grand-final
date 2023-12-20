@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {liveClassController,getliveClassController} from '../controller/liveClassController.js'
+import {liveClassController,getliveClassController,ratingController} from '../controller/liveClassController.js'
 
 //-------------- ROUTING OBJECT-----------
 const router = Router();
@@ -8,5 +8,5 @@ const router = Router();
 
 router.post('/:teacherId', liveClassController);
 router.get('/get',getliveClassController);
-
+router.post("/rating/:teacherId",ratingController);
 export default router;

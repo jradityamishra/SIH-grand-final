@@ -11,45 +11,75 @@ const OnlineClass = () => {
 
 
   const teacherId = user.user._id;
+  console.log("teachet:", teacherId)
   // ================ DATE==================
   const formattedDate = new Date().toISOString().split('T')[0]
 
   console.log(teacherId);
   const [link, setLink] = useState('');
   const [description, setDescription] = useState('');
-  const [subject, setSubject] = useState(user.user.subjectsTaught);
+  const [subject, setSubject] = useState(user.user.subjectsTaught[0]);
   const [time, setTime] = useState('');
   const [saveLink, setsaveLink] = useState([]);
   const [rating, setRating] = useState(null);
 
-  const handleRatingChange = (value) => {
-    setRating(value);
+
+  // =======handle rating==================
+
+  const handleRatingChange = async(value) => {
+     setRating(value);
+     try{
+      const data=await axios.post(`/api/v1/liveclass/rating/${teacherId}`,
+      {rating:value})
+      console.log("data:",data);
+     }catch(error){
+      toast.error("something wrong in rating")
+     }
+console.log(value);
+   
   };
   // ================SAVE DATA==================
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post(`/api/v1/liveclass/${teacherId}`,
-        {
-          description: description,
+ const handleSubmit=async(e)=>{
+  console.log(description,link,subject,time)
+  e.preventDefault();
+  try{
+    
+      const res=await axios.post(`/api/v1/liveclass/${teacherId}`,
+   { description: description,
           joiningLink: link,
           subject: subject,
-          Time: time
-        })
-      // console.log("resget:",res)
-      if (res) {
-        toast.success('Your data is Save')
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message || 'error in saving live Class detail ')
-    }
+          Time: time})
+          console.log("res:",res)
+    
+  }catch(error){
+    toast.error(error.message)
+  }
+ }
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const res = await axios.post(`/api/v1/liveclass/${teacherId}`,
+  //       {
+  //         description: description,
+  //         joiningLink: link,
+  //         subject: subject,
+  //         Time: time
+  //       })
+  //     // console.log("resget:",res)
+  //     if (res) {
+  //       toast.success('Your data is Save')
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error(error.message || 'error in saving live Class detail ')
+  //   }
 
-  };
+  // };
 
   // ================START CLASS==================
 
+  
   const startclass = async () => {
 
     try {
@@ -75,6 +105,13 @@ const OnlineClass = () => {
   useEffect(() => {
     startclass()
   }, [])
+   
+
+  // =============RATING BUTTON=============
+  
+  useEffect(() => {
+    startclass()
+  }, [])
 
   return (
     <div className="ml-56">
@@ -88,11 +125,13 @@ const OnlineClass = () => {
             <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
               subject
             </label>
-            {user.user.role === 'Teacher' ? <input
+            {user.user.role === 'teacher' ? <input
               id="subject"
               type="subject"
               placeholder={user.user.subjectsTaught}
               value={user.user.subjectsTaught}
+              //  onChange={(e)=>setSubject(e.target.value)}
+             
               //  onChange={(e)=>setSubject(e.target.value)}
               // onChange=(setSubject(value)}
               className="border p-3 w-full mt-1 rounded-md focus:outline-none focus:ring focus:border-blue-300"
@@ -102,17 +141,20 @@ const OnlineClass = () => {
           <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
             <h2 className="text-lg font-semibold mb-2">Subject</h2>
             <p className="text-gray-700">{saveLink.subject}</p>
+            <h2 className="text-lg font-semibold mb-2">Subject</h2>
+            <p className="text-gray-700">{saveLink.subject}</p>
           </div>
 
           <div className="mb-6">
             <label htmlFor="time" className="block text-sm font-medium text-gray-700">
               Time
             </label>
-            {user.user.role === 'Teacher' ? <input
+            {user.user.role === 'teacher' ? <input
               id="time"
               type="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
+             
               className="border p-3 w-full mt-1 rounded-md focus:outline-none focus:ring focus:border-blue-300"
             /> : ''}
           </div>
@@ -120,13 +162,15 @@ const OnlineClass = () => {
           <div className="bg-gray-200 p-6 mt-2 mb-4 rounded-md">
             <h2 className="text-lg font-semibold mb-2">Today's Lecture Time</h2>
             <p className="text-gray-700">{saveLink.Timing}</p>
+            <h2 className="text-lg font-semibold mb-2">Today's Lecture Time</h2>
+            <p className="text-gray-700">{saveLink.Timing}</p>
           </div>
 
           <div className="mb-6">
-            {user.user.role === 'Teacher' ? <label htmlFor="link" className="block text-sm font-medium text-gray-700">
+            {user.user.role === 'teacher' ? <label htmlFor="link" className="block text-sm font-medium text-gray-700">
               Paste Links/URLs
             </label> : ''}
-            {user.user.role === 'Teacher' ? <input
+            {user.user.role === 'teacher' ? <input
               id="link"
               type="text"
               value={link}
@@ -145,7 +189,7 @@ const OnlineClass = () => {
             <label htmlFor="description" className="block text-sm font-medium text-gray-700">
               Description
             </label>
-            {user.user.role === 'Teacher' ? <textarea
+            {user.user.role === 'teacher' ? <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -161,7 +205,7 @@ const OnlineClass = () => {
           </div>
 
           <div className="flex justify-between">
-            {user.user.role === 'Teacher' ? <button
+            {user.user.role === 'teacher' ? <button
               className="bg-blue-600 text-white mt-4 py-4 px-10 text-xl rounded-md font-bold hover:bg-red-700 focus:outline-none focus:ring focus:border-blue-300"
               onClick={handleSubmit}
             >

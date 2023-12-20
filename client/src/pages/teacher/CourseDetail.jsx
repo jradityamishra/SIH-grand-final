@@ -7,6 +7,7 @@ import Spinner from "../../components/Spinner";
 
 import DownloadIcon from "@mui/icons-material/Download";
 
+
 const LectureDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -148,12 +149,12 @@ const LectureDetail = () => {
                     {lectureData.creator.yearsOfExperience} years
                   </Typography>
                   <Typography variant="subtitle1" paragraph>
-                    Subjects Taught: {lectureData.creator.subjects.join(", ")}
+                    Subjects Taught: {lectureData.creator.subjectsTaught}
                   </Typography>
                   <Typography variant="subtitle1" paragraph>
                     <a href={`${lectureData.pdfLink.replace(
                       "/upload/",
-                      `/upload/fl_attachment:${lectureData.title}`
+                      `/upload/fl_attachment:notes`
                       )}`}
                       className="font-bold p-2 shadow-md rounded-md"
                       target="_blank"
