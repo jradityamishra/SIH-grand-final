@@ -7,8 +7,8 @@ const router = Router();
 
 //-------------- ROUTING-----------
 
-router.post('/hi',requireSignIn,sendMessageController);
-router.get('/:chatId',requireSignIn,allMessage)
+router.post('/hi',sendMessageController);
+router.get('/:chatId',allMessage)
 
 
 
