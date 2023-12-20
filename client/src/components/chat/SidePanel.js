@@ -175,7 +175,7 @@ const [id, setId] = useState();
         }
         try {
           if(userStudent._id){
-          const response = await axios.get(`/api/v1/chat/getGroup/${userStudent._id}`);
+          const response = await axios.get(`http://localhost:8000/api/v1/chat/getGroup/${userStudent._id}`);
           console.log("response", response.data.data);
           response.data.data.map((g)=>{
             setId(g.groupAdmin._id)
