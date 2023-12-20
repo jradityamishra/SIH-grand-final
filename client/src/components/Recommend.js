@@ -28,7 +28,7 @@ const Recommend = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {recommendations.map((recommendation) => (
           <div key={recommendation.id}>
-            <Card style={{ padding: "8px" }}>
+            <div style={{ padding: "16px" }}>
               <Typography variant="h6" component="div">
                 {recommendation.title}
               </Typography>
@@ -37,13 +37,13 @@ const Recommend = () => {
               </Typography>
               <Button
                 variant="contained"
-                style={{ margin: "8px" }}
+                style={{ margin: "8px", width: "22px" }}
                 size="small"
                 color="primary"
               >
-                Learn More
+                More
               </Button>
-            </Card>
+            </div>
           </div>
         ))}
       </div>

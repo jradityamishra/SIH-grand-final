@@ -12,6 +12,8 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import { Link } from "react-router-dom";
 import { Divider } from "@mui/material";
 import GrainIcon from "@mui/icons-material/Grain";
+import LiveTvIcon from "@mui/icons-material/LiveTv";
+
 export const mainListItems = (
   <React.Fragment>
     <Link to="/teacher/dashboard">
@@ -156,17 +158,21 @@ const teacher = {
 
 export const secondaryListItems = (
   <React.Fragment>
-    <ListSubheader component="div" inset>
-      My Classes
-    </ListSubheader>
-
     {/* {teacher.classes.map((item) => ( */}
     <Link to="/teacher/mentorship">
       <ListItemButton>
         <ListItemIcon>
           <LayersIcon />
         </ListItemIcon>
-        <ListItemText primary="In news" />
+        <ListItemText primary="Headlines" />
+      </ListItemButton>
+    </Link>
+    <Link to="/teacher/onlineclass">
+      <ListItemButton>
+        <ListItemIcon>
+          <LiveTvIcon />
+        </ListItemIcon>
+        <ListItemText primary="Live class" />
       </ListItemButton>
     </Link>
     {/* ))} */}

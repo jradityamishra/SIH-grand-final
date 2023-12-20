@@ -27,9 +27,10 @@ const GenerateNotes = () => {
 
       try {
         const res = await fetch(url, options);
+        console.log(res);
         const result = await res.json();
         console.log(result.response);
-        setResponseText(result.response);
+        setResponseText(JSON.stringify(result.response));
       } catch (error) {
         console.error(error);
       }

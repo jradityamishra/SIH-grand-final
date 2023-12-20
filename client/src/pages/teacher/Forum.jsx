@@ -89,11 +89,11 @@ const Forum = () => {
             <Grid item key={user.id} xs={12} sm={6} md={4}>
               <div className="flex items-center w-full justify-center">
                 <div className="max-w-xs">
-                  <div className="bg-white shadow-xl rounded-lg py-3">
+                  <div className="bg-white shadow-lg shadow-blue-100 rounded-lg px-16 py-3">
                     <div className="photo-wrapper p-2">
                       <img
                         className="w-32 h-32 rounded-full mx-auto"
-                        src="https://www.gravatar.com/avatar/2acfb745ecf9d4dccb3364752d17f65f?s=260&d=mp"
+                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
                         alt="John Doe"
                       />
                     </div>
@@ -108,34 +108,15 @@ const Forum = () => {
                         <tbody>
                           <tr>
                             <td className="px-2 py-2 text-gray-500 font-semibold">
-                              Address
+                              Achievements
                             </td>
-                            <td className="px-2 py-2">
-                              Chatakpur-3, Dhangadhi Kailali
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="px-2 py-2 text-gray-500 font-semibold">
-                              Phone
-                            </td>
-                            <td className="px-2 py-2">+977 9955221114</td>
-                          </tr>
-                          <tr>
-                            <td className="px-2 py-2 text-gray-500 font-semibold">
-                              Email
-                            </td>
-                            <td className="px-2 py-2">john@exmaple.com</td>
+                            <td className="px-2 py-2">{user.achievements}</td>
                           </tr>
                         </tbody>
                       </table>
 
                       <div className="text-center my-3">
-                        <a
-                          className="text-xs text-indigo-500 italic hover:underline hover:text-indigo-600 font-medium"
-                          href="#"
-                        >
-                          View Profile
-                        </a>
+                        <Link to="teacher/public-profile">View Profile</Link>
                       </div>
                     </div>
                   </div>
