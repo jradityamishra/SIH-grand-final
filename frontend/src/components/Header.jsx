@@ -17,6 +17,7 @@ import {
   studentListItems,
 } from "./ListItems";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -67,7 +68,8 @@ const Drawer = styled(MuiDrawer, {
 
 const Header = () => {
   const [open, setOpen] = React.useState(true);
-  const teacher = false;
+  const { user } = useSelector((state) => state.auth);
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -124,7 +126,7 @@ const Header = () => {
         </Toolbar>
         <Divider />
         <List component="nav">
-          {teacher ? (
+          {user.user.role === "teacher" ? (
             <>
               {mainListItems}
               <Divider sx={{ my: 1 }} />

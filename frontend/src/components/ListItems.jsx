@@ -50,10 +50,9 @@ export const mainListItems = (
     <Link to="/teacher/chat">
       <ListItemButton>
         <ListItemIcon>
-          {" "}
           <AssignmentIcon />
         </ListItemIcon>
-        <ListItemText primary="Community" />
+        <ListItemText primary="Chat" />
       </ListItemButton>
     </Link>
   </React.Fragment>

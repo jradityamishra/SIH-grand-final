@@ -1,6 +1,4 @@
 import { useEffect } from "react";
-import { Button } from "@mui/material";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -15,16 +13,30 @@ const Landing = () => {
     if (!systemUser) {
       navigate("/login");
     }
+
+    if (user !== null) {
+      user.user.role === "teacher"
+        ? navigate("/teacher/dashboard")
+        : navigate("/student/dashboard");
+    }
   }, [systemUser, navigate]);
 
   return (
     <>
       {systemUser ? (
-        <div>
-          <Link to="/teacher/dashboard">
-            <Button>Teacher Dashboard</Button>
-          </Link>
-        </div>
+        <>
+          <div>
+            {/* <Link to="/teacher/dashboard">
+              <Button>Teacher Dashboard</Button>
+            </Link>
+          </div>
+          <br />
+          <div>
+            <Link to="/student/dashboard">
+              <Button>Student Dashboard</Button>
+            </Link> */}
+          </div>
+        </>
       ) : (
         <></>
       )}
