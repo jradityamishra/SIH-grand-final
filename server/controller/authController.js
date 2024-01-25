@@ -1,4 +1,4 @@
-import {User,Teacher,Student} from "../models/UserModel.js";
+import { User, Teacher, Student } from "../models/UserModel.js";
 import { hashPassword, comparePassword } from "../helper/auth/authHelper.js";
 import generateAuthToken from "../helper/auth/generateAuthToken.js";
 // import {Student} from "../models/UserModel.js";
@@ -20,11 +20,10 @@ export const registerController = async (req, resp, next) => {
       studentClass,
       coursesTaught,
       board,
-      school
+      school,
     } = req.body;
-  
 
-    if (!name || !email || !password || !role|| !school) {
+    if (!name || !email || !password || !role || !school) {
       return resp.status(400).send({ message: "All fields are required" });
     }
 
@@ -56,11 +55,11 @@ export const registerController = async (req, resp, next) => {
         dob,
         role,
         yearsOfExperience,
-        subjectsTaught:subject,
+        subjectsTaught: subject,
         levelOfEducation,
         coursesTaught,
         about,
-        school
+        school,
       }).save();
     } else if (role === "student") {
       user = await new Student({
@@ -71,10 +70,10 @@ export const registerController = async (req, resp, next) => {
         dob,
         studentClass,
         board,
-        school
+        school,
       }).save();
     }
-    
+
     resp
       .cookie(
         "access_token",
@@ -98,7 +97,6 @@ export const registerController = async (req, resp, next) => {
 };
 
 //-------------- LOGIN USER-----------
-
 
 export const loginController = async (req, resp) => {
   try {
@@ -137,34 +135,29 @@ export const loginController = async (req, resp) => {
       )
       .status(201)
       .send({
-        success:true,
-        message:"login successfully",
-        user
-
+        success: true,
+        message: "login successfully",
+        user,
       });
   } catch (error) {
     next(error);
   }
 };
 
+// /api/user?search=
 
-  // /api/user?search=
-
-  export const getUser=async(req,resp)=>{
-   
-    
-      const keyword=req.query.search
-      ? {
-        $or:[
-          {firstName:{$regex:req.query.search, $options: 'i' }
-       }, {class:{$regex:req.query.search, $options: 'i' },}
+export const getUser = async (req, resp) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { firstName: { $regex: req.query.search, $options: "i" } },
+          { class: { $regex: req.query.search, $options: "i" } },
         ],
-        role: { $ne: 'teacher' }, // Exclude users with the role 'teacher'
+        role: { $ne: "teacher" }, // Exclude users with the role 'teacher'
       }
-    : { role: { $ne: 'teacher' }};
+    : { role: { $ne: "teacher" } };
 
-      const users=await User.find({...keyword,  _id:{$ne:req.user._id}}) //except this user retun me all id
+  const users = await User.find({ ...keyword, _id: { $ne: req.user._id } }); //except this user retun me all id
 
-    resp.send(users);
-  } 
-       
+  resp.send(users);
+};
