@@ -96,13 +96,23 @@ const Assignment = () => {
       // Get the public URL of the uploaded file
       const fileUrl = cloudinaryResponse.data.secure_url;
 
-      console.log("File uploaded to Cloudinary:", fileUrl);
+      console.log("File uploaded to Cloudinary:",fileUrl);
+        if(fileUrl){
+          data()
+        }
 
-
-
+      
       const data=async()=>{
         try{
-          const mydata=await axios.post('/api/v1/assignmentUpload',)
+          const mydata=await axios.post('/api/v1/assignmentUpload',{
+            title:assignment.title,
+            description:assignment.description,
+            descriptionFile:fileUrl,
+            deadlineDays:assignment.deadlineDays
+          })
+          if(mydata){
+            console.log(mydata)
+          }
         }catch(err){
           console.log(err.msg)
         }

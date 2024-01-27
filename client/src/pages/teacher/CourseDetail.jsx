@@ -176,8 +176,11 @@ const LectureDetail = () => {
                   )}
                 </CardContent>
               </div>
-              <div>
+              
+            </Card>
+            <div className="flex justify-center">
                 <video
+                
                   width="560"
                   height="315"
                   controls
@@ -186,7 +189,6 @@ const LectureDetail = () => {
                   onEnded={handleVideoEnd}
                 ></video>
               </div>
-            </Card>
     </div>
   )
 }

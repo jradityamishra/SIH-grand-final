@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useEffect,useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -13,14 +12,8 @@ import Chart from "../../components/Chart";
 import Percentage from "../../components/Percentage";
 import Recommend from "../../components/Recommend";
 import Layout from "../../components/layout/Layout";
-import axios from "axios";
-import { useSelector,useDispatch } from 'react-redux'
 
-import {login,logout,reset } from "../../redux/authSlice"
-import Spinner from "../../components/Spinner";
-// import { useSelector } from "react-redux";
 function Copyright(props) {
-  
   return (
     <Typography
       variant="body2"
@@ -38,37 +31,84 @@ function Copyright(props) {
   );
 }
 
+const teacherGrowth = {
+  Jan: {
+    feedback: 500,
+    achievements: 2,
+    yearsOfExperience: 20,
+    contribution: 5,
+  },
+  Feb: {
+    feedback: 525,
+    achievements: 2,
+    yearsOfExperience: 21,
+    contribution: 5,
+  },
+  Mar: {
+    feedback: 551,
+    achievements: 2,
+    yearsOfExperience: 22,
+    contribution: 6,
+  },
+  Apr: {
+    feedback: 679,
+    achievements: 2,
+    yearsOfExperience: 23,
+    contribution: 6,
+  },
+  May: {
+    feedback: 708,
+    achievements: 2,
+    yearsOfExperience: 24,
+    contribution: 7,
+  },
+  Jun: {
+    feedback: 739,
+    achievements: 2,
+    yearsOfExperience: 25,
+    contribution: 7,
+  },
+  Jul: {
+    feedback: 671,
+    achievements: 2,
+    yearsOfExperience: 26,
+    contribution: 8,
+  },
+  Aug: {
+    feedback: 805,
+    achievements: 2,
+    yearsOfExperience: 27,
+    contribution: 8,
+  },
+  Sep: {
+    feedback: 840,
+    achievements: 2,
+    yearsOfExperience: 28,
+    contribution: 9,
+  },
+  Oct: {
+    feedback: 977,
+    achievements: 2,
+    yearsOfExperience: 29,
+    contribution: 9,
+  },
+  Nov: {
+    feedback: 816,
+    achievements: 2,
+    yearsOfExperience: 30,
+    contribution: 10,
+  },
+  Dec: {
+    feedback: 757,
+    achievements: 2,
+    yearsOfExperience: 31,
+    contribution: 10,
+  },
+};
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
-  const [loading, setLoading] = useState(false);
-  const [teacherGraph, setTeacherGraph] = React.useState({});
-  const { user } = useSelector(
-    (state) => state.auth
-  );
-
-  useEffect(() => {
-
-  const teacherGrowth = async () => {
-    try {      setLoading(true);
-
-      const response = await axios.get(
-        `http://localhost:8000/api/v1/analysis/${user.user._id}`
-      );
-      setTeacherGraph(response.data.analysis);
-      console.log(response.data.analysis);
-
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching courses:", error);
-      setLoading(false);
-    }
-  };
-
-  teacherGrowth();
-}, []);
-
   return (
     <Layout>
       <ThemeProvider theme={defaultTheme}>
@@ -95,7 +135,7 @@ export default function Dashboard() {
                       height: 240,
                     }}
                   >
-                    <Chart teacherGrowth={teacherGraph} />
+                    {/* <Chart teacherGrowth={teacherGrowth} /> */}
                   </Paper>
                 </Grid>
                 {/* Recent Deposits */}
@@ -108,7 +148,7 @@ export default function Dashboard() {
                       height: 240,
                     }}
                   >
-                    <Percentage teacherGrowth={teacherGraph} />
+                    {/* <Percentage teacherGrowth={teacherGrowth} /> */}
                   </Paper>
                 </Grid>
                 {/* Recent Orders */}

@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { postLiveclassData, getLiveClassData } from '../../redux/liveClassSlice'
 import { toast } from 'react-toastify';
 import Layout from '../../components/layout/Layout';
+import {useNavigate} from 'react-router-dom'
 const OnlineClass = () => {
+  const navigate=useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector(
     (state) => state.auth
@@ -41,42 +43,42 @@ console.log(value);
   };
   // ================SAVE DATA==================
 
- const handleSubmit=async(e)=>{
-  console.log(description,link,subject,time)
-  e.preventDefault();
-  try{
-    
-      const res=await axios.post(`/api/v1/liveclass/${teacherId}`,
-   { description: description,
+ 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(`/api/v1/liveclass/${teacherId}`,
+        {
+          description: description,
           joiningLink: link,
           subject: subject,
-          Time: time})
-          console.log("res:",res)
-    
-  }catch(error){
-    toast.error(error.message)
-  }
- }
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const res = await axios.post(`/api/v1/liveclass/${teacherId}`,
-  //       {
-  //         description: description,
-  //         joiningLink: link,
-  //         subject: subject,
-  //         Time: time
-  //       })
-  //     // console.log("resget:",res)
-  //     if (res) {
-  //       toast.success('Your data is Save')
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error(error.message || 'error in saving live Class detail ')
-  //   }
+          Time: time
+        })
+      // console.log("resget:",res)
+      if (res) {
+        toast.success('Your data is Save')
+      }
+    } catch (error) {
+      console.log(error); navigate('/profile')
+      // toast.error(error.message || 'error in saving live Class detail ')
+    }
 
-  // };
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // ================START CLASS==================
 
@@ -103,9 +105,7 @@ console.log(value);
 
   // =============RATING BUTTON=============
   
-  useEffect(() => {
-    startclass()
-  }, [])
+  
    
 
   // =============RATING BUTTON=============

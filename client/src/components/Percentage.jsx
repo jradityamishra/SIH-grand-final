@@ -10,27 +10,24 @@ function preventDefault(event) {
 export default function Deposits({ teacherGrowth }) {
   // Calculate the slope comparison difference for the total attributes of the last 2 months
   const calculateSlopeDifference = () => {
-    const sortedGrowth = [...teacherGrowth].sort((a, b) => a.month - b.month);
-  
-    // Get the last 2 months
-    const lastMonthData = sortedGrowth[sortedGrowth.length - 1];
-    const secondLastMonthData = sortedGrowth[sortedGrowth.length - 2];
-  
-    // Calculate the total of aggregateFeedback for the last 2 months
-    const lastMonthTotal = Object.values(lastMonthData.aggregateFeedback).reduce(
+    const months = Object.keys(teacherGrowth);
+    const lastMonth = months[months.length - 1];
+    const secondLastMonth = months[months.length - 2];
+
+    const lastMonthTotal = Object.values(teacherGrowth[lastMonth]).reduce(
       (total, value) => total + value,
       0
     );
     const secondLastMonthTotal = Object.values(
-      secondLastMonthData.aggregateFeedback
+      teacherGrowth[secondLastMonth]
     ).reduce((total, value) => total + value, 0);
-  
+
     // Calculate the slope comparison difference
-    const slopeDifference = (lastMonthTotal - secondLastMonthTotal) / lastMonthTotal;
-  
+    const slopeDifference =
+      (lastMonthTotal - secondLastMonthTotal) / lastMonthTotal;
+
     return slopeDifference;
   };
-  
 
   const value = calculateSlopeDifference();
   const currentDate = new Date().toLocaleDateString();
